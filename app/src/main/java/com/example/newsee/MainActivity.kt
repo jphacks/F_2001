@@ -1,14 +1,11 @@
 package com.example.newsee
 
 import android.content.Intent
-import android.graphics.PixelFormat
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.WindowManager
 import android.widget.ToggleButton
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +28,8 @@ class MainActivity : AppCompatActivity() {
                 else OverlayService.stop(this@MainActivity)
             }
         }
+
+        FeedService.start(this@MainActivity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

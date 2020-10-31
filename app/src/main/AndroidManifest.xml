@@ -17,10 +17,10 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".OverlayService">
-        </service>
+        <service android:name=".FeedService" />
+        <service android:name=".OverlayService" />
     </application>
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
