@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import android.view.Menu
+import android.view.MenuItem
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -117,8 +119,8 @@ class MainActivity : AppCompatActivity() {
     private fun requestOverlayPermission() {
         if (isOverlayGranted()) return
         val intent = Intent(
-                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                Uri.parse("package:$packageName")
+            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+            Uri.parse("package:$packageName")
         )
         startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE)
     }
@@ -126,4 +128,22 @@ class MainActivity : AppCompatActivity() {
     /** オーバーレイの権限があるかどうかチェック */
     private fun isOverlayGranted() =
             Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            // User chose the "Settings" item, show the app settings UI...
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.setting_icon, menu)
+        return true
+    }
 }
