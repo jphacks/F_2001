@@ -14,11 +14,11 @@ import android.util.Log
 import android.widget.ToggleButton
 
 class MainActivity : AppCompatActivity() {
-    private var feedsBinder : FeedService.FeedsBinder? = null
+    private var feedsBinder : FeedsService.FeedsBinder? = null
 
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            feedsBinder = binder as FeedService.FeedsBinder
+            feedsBinder = binder as FeedsService.FeedsBinder
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -47,10 +47,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val intent = Intent(applicationContext, FeedService::class.java)
+        val intent = Intent(applicationContext, FeedsService::class.java)
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 
-        FeedService.start(this@MainActivity)
+        FeedsService.start(this@MainActivity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

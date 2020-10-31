@@ -17,14 +17,14 @@ import retrofit2.Retrofit
 /**
  * A background service for fetching RSS feeds.
  */
-class FeedService : Service() {
+class FeedsService : Service() {
     private val binder = FeedsBinder()
     private val feeds = mutableListOf<Feed>()
 
     companion object {
         fun start(context: Context) {
             Log.d("FeedService", "called.")
-            val intent = Intent(context, FeedService::class.java)
+            val intent = Intent(context, FeedsService::class.java)
             context.startService(intent)
         }
     }

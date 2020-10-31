@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".FeedService" />
+        <service android:name=".FeedsService" />
         <service android:name=".OverlayService" />
     </application>
 
