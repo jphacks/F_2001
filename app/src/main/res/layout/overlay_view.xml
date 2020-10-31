@@ -13,12 +13,12 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="100dp"
             />
+
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Overlay View"
+            android:layout_height="171dp"
             android:layout_gravity="center"
             android:layout_margin="150dp"
-            />
+            android:text="Overlay View" />
     </FrameLayout>
 </com.example.newsee.OverlayView>
