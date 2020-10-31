@@ -46,7 +46,6 @@ class MainActivity : AppCompatActivity() {
                 else OverlayService.stop(this@MainActivity)
             }
         }
-
         val intent = Intent(applicationContext, FeedsService::class.java)
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 
