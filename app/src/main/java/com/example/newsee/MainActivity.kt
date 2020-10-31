@@ -1,14 +1,31 @@
 package com.example.newsee
 
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
+import android.util.Log
 import android.widget.ToggleButton
 
 class MainActivity : AppCompatActivity() {
+    private var feedsBinder : FeedService.FeedsBinder? = null
+
+    private val mConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            feedsBinder = binder as FeedService.FeedsBinder
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            feedsBinder = null
+        }
+    }
+
     companion object {
         /** ID for the runtime permission dialog */
         private const val OVERLAY_PERMISSION_REQUEST_CODE = 1
@@ -24,10 +41,14 @@ class MainActivity : AppCompatActivity() {
         findViewById<ToggleButton>(R.id.toggle_button).apply {
             isChecked = OverlayService.isActive
             setOnCheckedChangeListener { _, isChecked ->
+                Log.d("FEEDS", feedsBinder?.getFeeds().toString())
                 if (isChecked) OverlayService.start(this@MainActivity)
                 else OverlayService.stop(this@MainActivity)
             }
         }
+
+        val intent = Intent(applicationContext, FeedService::class.java)
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 
         FeedService.start(this@MainActivity)
     }
