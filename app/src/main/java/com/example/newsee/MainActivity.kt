@@ -6,12 +6,16 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
+import android.view.View
+import android.widget.ListView
+import android.widget.SimpleAdapter
 import android.widget.ToggleButton
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
@@ -50,6 +54,18 @@ class MainActivity : AppCompatActivity() {
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 
         FeedsService.start(this@MainActivity)
+
+        val adapter = SimpleAdapter(
+            this,
+            mutableListOf(mapOf("title" to "title", "description" to "description")),
+            android.R.layout.simple_list_item_2,
+            arrayOf("title", "description"),
+            intArrayOf(android.R.id.text1, android.R.id.text2)
+        )
+
+        // ListViewにArrayAdapterを設定する
+        val listView: ListView = findViewById<View>(R.id.listView) as ListView
+        listView.setAdapter(adapter)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
