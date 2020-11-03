@@ -26,8 +26,6 @@ class OverlayView @JvmOverloads constructor(
     private val layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,  // Overlay レイヤに表示
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE  // フォーカスを奪わない
-                    or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-                    or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                     or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,  // 画面外への拡張を許可
             PixelFormat.TRANSLUCENT
     )
@@ -35,7 +33,6 @@ class OverlayView @JvmOverloads constructor(
     /** Starts displaying this view as overlay. */
     @Synchronized
     fun show() {
-        Log.d("hoge", "show")
         if (!this.isShown) {
             windowManager.addView(this, layoutParams)
         }
@@ -44,7 +41,6 @@ class OverlayView @JvmOverloads constructor(
     /** Hide this view. */
     @Synchronized
     fun hide() {
-        Log.d("hoge", "hide")
         if (this.isShown) {
             windowManager.removeView(this)
         }

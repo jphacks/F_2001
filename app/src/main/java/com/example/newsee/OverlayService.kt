@@ -5,6 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 
 /**
  * A foreground service for managing the life cycle of overlay view.
@@ -13,12 +18,16 @@ class OverlayService : Service() {
     companion object {
         private const val ACTION_SHOW = "SHOW"
         private const val ACTION_HIDE = "HIDE"
+        private lateinit var overlayView: OverlayView
+        private lateinit var viewPager: ViewPager2
 
-        fun start(context: Context) {
+        fun start(context: Context, overlayView: OverlayView, viewPager: ViewPager2) {
             val intent = Intent(context, OverlayService::class.java).apply {
                 action = ACTION_SHOW
             }
-            Log.d("OverlayService", "start" + isActive)
+
+            this.overlayView = overlayView
+            this.viewPager = viewPager
             context.startService(intent)
         }
 
@@ -26,7 +35,6 @@ class OverlayService : Service() {
             val intent = Intent(context, OverlayService::class.java).apply {
                 action = ACTION_HIDE
             }
-            Log.d("OverlayService", "stop" + isActive)
             context.startService(intent)
         }
 
@@ -35,17 +43,9 @@ class OverlayService : Service() {
             private set
     }
 
-    private lateinit var overlayView: OverlayView
-
-    override fun onCreate() {
-        overlayView = OverlayView.create(this)
-    }
-
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("onStartCommand", "called")
         intent?.let {
-            it.action?.let { it1 -> Log.d("intent.action", it1) }
             when (it.action) {
                 ACTION_SHOW -> {
                     isActive = true
