@@ -18,16 +18,14 @@ class OverlayService : Service() {
     companion object {
         private const val ACTION_SHOW = "SHOW"
         private const val ACTION_HIDE = "HIDE"
-        private lateinit var overlayView: OverlayView
-        private lateinit var viewPager: ViewPager2
+        private lateinit var adapter: ScreenSlidePagerAdapter
 
-        fun start(context: Context, overlayView: OverlayView, viewPager: ViewPager2) {
+        fun start(context: Context) {
             val intent = Intent(context, OverlayService::class.java).apply {
                 action = ACTION_SHOW
             }
 
-            this.overlayView = overlayView
-            this.viewPager = viewPager
+            adapter = ScreenSlidePagerAdapter(context as AppCompatActivity)
             context.startService(intent)
         }
 
@@ -41,6 +39,15 @@ class OverlayService : Service() {
         // To control toggle button in MainActivity. This is not elegant but works.
         var isActive = false
             private set
+    }
+
+    private lateinit var overlayView: OverlayView
+    private lateinit var viewPager: ViewPager2
+
+    override fun onCreate() {
+        overlayView = OverlayView.create(this)
+        viewPager = overlayView.findViewById(R.id.pager)
+        viewPager.adapter = adapter
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */
@@ -66,4 +73,10 @@ class OverlayService : Service() {
 
     /** This service does not support binding. */
     override fun onBind(intent: Intent?) = null
+
+    private class ScreenSlidePagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = 5
+
+        override fun createFragment(position: Int): Fragment = OverlaySlideItemFragment()
+    }
 }

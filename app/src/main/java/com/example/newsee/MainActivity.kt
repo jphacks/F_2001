@@ -22,9 +22,6 @@ import androidx.viewpager2.widget.ViewPager2
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
 
-    private lateinit var overlayView: OverlayView
-    private lateinit var viewPager: ViewPager2
-
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             feedsBinder = binder as FeedsService.FeedsBinder
@@ -45,20 +42,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         requestOverlayPermission()
-        createOverlayView()
-
-        viewPager.setOnClickListener {
-            if (viewPager.currentItem > 0) {
-                viewPager.currentItem = viewPager.currentItem - 1
-            }
-        }
 
         // Show/hide overlay view with a toggle button.
         findViewById<ToggleButton>(R.id.toggle_button).apply {
             isChecked = OverlayService.isActive
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked)
-                    OverlayService.start(this@MainActivity, overlayView, viewPager)
+                    OverlayService.start(this@MainActivity)
                 else
                     OverlayService.stop(this@MainActivity)
             }
@@ -79,16 +69,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-    override fun onBackPressed() {
-        if (viewPager.currentItem == 4) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed()
-        } else {
-            // Otherwise, select the previous step.
-            viewPager.currentItem = viewPager.currentItem + 1
-        }
-    }
 
     /* 必要に応じてユーザに権限をリクエスト */
     private fun requestOverlayPermission() {
@@ -104,16 +84,4 @@ class MainActivity : AppCompatActivity() {
     private fun isOverlayGranted() =
             Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
                     Settings.canDrawOverlays(this)
-
-    private fun createOverlayView() {
-        overlayView = OverlayView.create(this)
-        viewPager = overlayView.findViewById<ViewPager2>(R.id.pager)
-        viewPager.adapter = ScreenSlidePagerAdapter(this)
-    }
-
-    private class ScreenSlidePagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 5
-
-        override fun createFragment(position: Int): Fragment = OverlaySlideItemFragment()
-    }
 }
