@@ -6,12 +6,14 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.widget.ToggleButton
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
@@ -37,6 +39,34 @@ class MainActivity : AppCompatActivity() {
 
         requestOverlayPermission()
 
+        var dY: Float = 0F
+
+        findViewById<View>(R.id.toggle_button).setOnTouchListener {v, motionEvent ->
+            when (motionEvent?.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    dY = v.getY() - motionEvent.getRawY()
+                    Log.d(
+                        "ACTION_DOWN",
+                        motionEvent.getPressure().toString() + "," + motionEvent?.getX()
+                            .toString() + "," + motionEvent?.getY().toString()
+                    )
+                }
+                MotionEvent.ACTION_UP -> {
+                    Log.d(
+                        "ACTION_UP",
+                        motionEvent?.getX().toString() + "," + motionEvent?.getY().toString()
+                    )
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    v.animate()
+                        .y(motionEvent.getRawY() + dY)
+                        .setDuration(0)
+                        .start()
+                }
+            }
+
+            true
+        }
         // Show/hide overlay view with a toggle button.
         findViewById<ToggleButton>(R.id.toggle_button).apply {
             isChecked = OverlayService.isActive
