@@ -6,6 +6,12 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".MainActivity">
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="150dp" />
+
     <ToggleButton
         android:id="@+id/toggle_button"
         android:layout_width="wrap_content"
