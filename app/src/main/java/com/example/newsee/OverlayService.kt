@@ -1,12 +1,15 @@
 package com.example.newsee
 
 import android.app.Service
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Point
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -29,10 +32,15 @@ class OverlayService : Service() {
         private const val ACTION_SHOW = "SHOW"
         private const val ACTION_HIDE = "HIDE"
 
-        fun start(context: Context) {
+        private lateinit var feedsBinder : FeedsService.FeedsBinder
+
+        fun start(context: Context, binder: FeedsService.FeedsBinder?) {
+            binder ?: return
+
             val intent = Intent(context, OverlayService::class.java).apply {
                 action = ACTION_SHOW
             }
+            feedsBinder = binder
             context.startService(intent)
         }
 
@@ -52,11 +60,12 @@ class OverlayService : Service() {
     private lateinit var viewPager: ViewPager2
 
     override fun onCreate() {
+        // setup overlay view and view pager
         overlayView = OverlayView.create(this)
         overlayView.findViewById<View>(R.id.pager)
-
         viewPager = overlayView.findViewById(R.id.pager)
-        viewPager.adapter = MovablePagerAdapter(overlayView, viewPager)
+        viewPager.adapter = MovablePagerAdapter(overlayView, viewPager, feedsBinder)
+
         refreshHandler()
     }
 

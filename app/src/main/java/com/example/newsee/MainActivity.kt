@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             isChecked = OverlayService.isActive
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked)
-                    OverlayService.start(this@MainActivity)
+                    OverlayService.start(this@MainActivity, feedsBinder)
                 else
                     OverlayService.stop(this@MainActivity)
             }
