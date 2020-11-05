@@ -65,8 +65,6 @@ class OverlayService : Service() {
         overlayView.findViewById<View>(R.id.pager)
         viewPager = overlayView.findViewById(R.id.pager)
         viewPager.adapter = MovablePagerAdapter(overlayView, viewPager, feedsBinder)
-
-        refreshHandler()
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */
@@ -77,10 +75,12 @@ class OverlayService : Service() {
                 ACTION_SHOW -> {
                     isActive = true
                     overlayView.show()
+                    ViewPagerAutoScrollService.start(this, viewPager)
                 }
                 ACTION_HIDE -> {
                     isActive = false
                     overlayView.hide()
+                    ViewPagerAutoScrollService.stop(this)
                     stopSelf()
                 }
             }
@@ -90,24 +90,11 @@ class OverlayService : Service() {
 
     /** Cleans up views just in case. */
     @RequiresApi(Build.VERSION_CODES.R)
-    override fun onDestroy() = overlayView.hide()
+    override fun onDestroy() {
+        overlayView.hide()
+        ViewPagerAutoScrollService.stop(this)
+    }
 
     /** This service does not support binding. */
     override fun onBind(intent: Intent?) = null
-
-    private fun refreshHandler() {
-        val handlerThread = HandlerThread("carousel")
-        handlerThread.start()
-        Handler(handlerThread.looper).postDelayed({
-            if (viewPager.currentItem < (viewPager.adapter?.itemCount ?: 0) - 1) {
-                viewPager.currentItem += 1
-            }
-            // 最初に戻ろうとすると落ちる
-            // TODO: serviceに移行してメインスレッドで処理させる
-//            else {
-//                viewPager.currentItem = 0
-//            }
-            refreshHandler()
-        }, 5000)
-    }
 }

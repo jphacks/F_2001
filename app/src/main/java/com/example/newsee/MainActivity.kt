@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // TODO: 「インターネットにつないでください」的なアラートを出す
         val intent = Intent(applicationContext, FeedsService::class.java)
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 
