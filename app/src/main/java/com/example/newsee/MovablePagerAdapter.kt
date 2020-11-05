@@ -21,7 +21,7 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
     private var isLongClick: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_overlay_slide_item, parent, false))
+            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overlay_slide_item, parent, false))
 
     override fun getItemCount(): Int = 5
 

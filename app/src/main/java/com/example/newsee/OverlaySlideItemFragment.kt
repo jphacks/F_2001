@@ -11,5 +11,5 @@ class OverlaySlideItemFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.fragment_overlay_slide_item, container, false)
+    ): View = inflater.inflate(R.layout.overlay_slide_item, container, false)
 }
