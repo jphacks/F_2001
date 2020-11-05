@@ -6,8 +6,10 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:context=".MainActivity">
+
     <ToggleButton
         android:id="@+id/toggle_button"
+        android:translationY="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </LinearLayout>

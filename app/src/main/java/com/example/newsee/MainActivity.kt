@@ -1,21 +1,29 @@
 package com.example.newsee
 
+import android.app.PictureInPictureParams
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.IBinder
 import android.provider.Settings
 import android.util.Log
+import android.util.Rational
+import android.view.*
+import android.widget.Button
 import android.widget.ToggleButton
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
-
     private val mConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             feedsBinder = binder as FeedsService.FeedsBinder
@@ -41,9 +49,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<ToggleButton>(R.id.toggle_button).apply {
             isChecked = OverlayService.isActive
             setOnCheckedChangeListener { _, isChecked ->
-                Log.d("FEEDS", feedsBinder?.getFeeds().toString())
-                if (isChecked) OverlayService.start(this@MainActivity)
-                else OverlayService.stop(this@MainActivity)
+                if (isChecked)
+                    OverlayService.start(this@MainActivity)
+                else
+                    OverlayService.stop(this@MainActivity)
             }
         }
 
