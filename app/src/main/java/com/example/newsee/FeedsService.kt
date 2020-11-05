@@ -23,7 +23,6 @@ class FeedsService : Service() {
 
     companion object {
         fun start(context: Context) {
-            Log.d("FeedService", "called.")
             val intent = Intent(context, FeedsService::class.java)
             context.startService(intent)
         }
@@ -62,8 +61,6 @@ class FeedsService : Service() {
                                 )
                             )
                         }
-                        // このfeedsからカルーセル風viewを作成
-                        Log.d("FETCHED", feeds.toString())
                     }
                 } else {
                     Log.d("NOT SUCCESS", response.toString())
