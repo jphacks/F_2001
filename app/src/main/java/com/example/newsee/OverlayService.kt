@@ -56,8 +56,7 @@ class OverlayService : Service() {
         overlayView.findViewById<View>(R.id.pager)
 
         viewPager = overlayView.findViewById(R.id.pager)
-        viewPager.adapter = ViewPager2Adapter(overlayView)
-        viewPager.isUserInputEnabled = false
+        viewPager.adapter = MovablePagerAdapter(overlayView, viewPager)
         refreshHandler()
     }
 
@@ -101,66 +100,5 @@ class OverlayService : Service() {
 //            }
             refreshHandler()
         }, 5000)
-    }
-
-    class ViewPager2Adapter(private val overlayView: OverlayView) :
-            RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-        // TODO: itemsを渡す (bind?)
-        val items = mutableListOf<Any>()
-        private var isLongClick: Boolean = false
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-                ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.fragment_overlay_slide_item, parent, false))
-
-        override fun getItemCount(): Int = 5
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            // bind your items
-        }
-
-        private inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            init {
-                itemView.apply(clickListener())
-            }
-        }
-
-        private fun clickListener(): View.() -> Unit {
-            return {
-                setOnLongClickListener { view ->
-                    isLongClick = true
-                    false
-                }.apply {
-                    setOnTouchListener { view, motionEvent ->
-                        when (motionEvent.action) {
-                            MotionEvent.ACTION_MOVE -> {
-                                if (isLongClick) {
-                                    // TODO: スクロールを止める
-                                    val displaySize = overlayView.windowManager.currentWindowMetrics.bounds
-
-                                    val x = motionEvent.rawX.toInt()
-                                    val y = motionEvent.rawY.toInt()
-
-                                    val centerX = x - displaySize.centerX()
-                                    val centerY = y - displaySize.centerY()
-
-                                    // オーバーレイ表示領域の座標を移動させる
-                                    overlayView.layoutParams.x = centerX
-                                    overlayView.layoutParams.y = centerY
-                                    overlayView.windowManager.updateViewLayout(overlayView, overlayView.layoutParams)
-                                }
-                            }
-                            MotionEvent.ACTION_UP -> {
-                                if (isLongClick) {
-                                    // TODO: スクロールを再開
-                                    isLongClick = false
-                                }
-                            }
-                        }
-                        false
-                    }
-                }
-            }
-        }
     }
 }

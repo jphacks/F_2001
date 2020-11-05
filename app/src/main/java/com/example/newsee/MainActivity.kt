@@ -24,15 +24,15 @@ import androidx.viewpager2.widget.ViewPager2
 
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
-//    private val mConnection = object : ServiceConnection {
-//        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-//            feedsBinder = binder as FeedsService.FeedsBinder
-//        }
-//
-//        override fun onServiceDisconnected(name: ComponentName?) {
-//            feedsBinder = null
-//        }
-//    }
+    private val mConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            feedsBinder = binder as FeedsService.FeedsBinder
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            feedsBinder = null
+        }
+    }
 
     companion object {
         /** ID for the runtime permission dialog */
@@ -56,10 +56,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-//        val intent = Intent(applicationContext, FeedsService::class.java)
-//        bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        val intent = Intent(applicationContext, FeedsService::class.java)
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 
-        // FeedsService.start(this@MainActivity)
+        FeedsService.start(this@MainActivity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
