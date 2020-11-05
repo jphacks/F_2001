@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
 @RequiresApi(Build.VERSION_CODES.R)
-class MovablePagerAdapter(private val overlayView: OverlayView, private val targetPager: ViewPager2, private val binder: FeedsService.FeedsBinder) :
+class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?) :
         RecyclerView.Adapter<MovablePagerAdapter.ItemViewHolder>() {
 
     private var isLongClick: Boolean = false
@@ -23,10 +23,9 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovablePagerAdapter.ItemViewHolder =
             ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overlay_slide_item, parent, false))
 
-    override fun getItemCount(): Int = binder.getFeeds().size ?: 0
+    override fun getItemCount(): Int = binder.getFeeds().size
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        Log.d("onBindViewHolder", binder.getFeeds().toString())
         val feed = binder.getFeeds()[position]
         holder.titleText.text = feed.title
         holder.descriptionText.text = feed.description
@@ -61,15 +60,14 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
         return {
             setOnLongClickListener {
                 isLongClick = true
-                targetPager.isUserInputEnabled = false
+                notifyLongClick?.invoke(true)
+
                 false
             }.apply {
                 setOnTouchListener { view, motionEvent ->
                     when (motionEvent.action) {
                         MotionEvent.ACTION_MOVE -> {
                             if (isLongClick) {
-                                // TODO: スクロールを止める
-
                                 // NOTE: deprecatedですが, Android 8で動くようにするためです
                                 val display = overlayView.windowManager.defaultDisplay
                                 val size = Point()
@@ -89,9 +87,8 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
                         }
                         MotionEvent.ACTION_UP -> {
                             if (isLongClick) {
-                                // TODO: スクロールを再開
                                 isLongClick = false
-                                targetPager.isUserInputEnabled = true
+                                notifyLongClick?.invoke(false)
                             }
                             view.performClick()
                         }

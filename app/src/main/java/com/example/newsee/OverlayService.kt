@@ -64,7 +64,16 @@ class OverlayService : Service() {
         overlayView = OverlayView.create(this)
         overlayView.findViewById<View>(R.id.pager)
         viewPager = overlayView.findViewById(R.id.pager)
-        viewPager.adapter = MovablePagerAdapter(overlayView, viewPager, feedsBinder)
+        viewPager.adapter = MovablePagerAdapter(overlayView, feedsBinder) { longClicked: Boolean ->
+            // viewPagerの要素が長押しされたとき / 離されたとき
+            if (longClicked) {
+                viewPager.isUserInputEnabled = false
+                ViewPagerAutoScrollService.stop(this)
+            } else {
+                viewPager.isUserInputEnabled = true
+                ViewPagerAutoScrollService.start(this, viewPager)
+            }
+        }
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */
