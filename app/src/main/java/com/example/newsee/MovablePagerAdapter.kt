@@ -42,8 +42,6 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
                 titleText = findViewById(R.id.feed_title)
                 descriptionText =findViewById(R.id.feed_description)
 
-                clickListener()
-
                 findViewById<ImageButton>(R.id.detail_button).setOnClickListener {
                     Log.d("Detail Button", "clicked.")
                 }
@@ -55,6 +53,7 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
                     (it as ImageButton).setImageResource(src)
                 }
             }
+            itemView.apply(clickListener())
         }
     }
 
