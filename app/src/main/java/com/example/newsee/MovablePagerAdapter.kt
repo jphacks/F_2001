@@ -2,10 +2,12 @@ package com.example.newsee
 
 import android.graphics.Point
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -28,8 +30,20 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
     }
 
     private inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private var bookmarked = false
+
         init {
             itemView.apply(clickListener())
+            itemView.findViewById<ImageButton>(R.id.detail_button).setOnClickListener {
+                Log.d("Detail Button", "clicked.")
+            }
+            itemView.findViewById<ImageButton>(R.id.bookmark_button).setOnClickListener {
+                Log.d("Bookmark Button", "clicked." + bookmarked)
+                bookmarked = !bookmarked
+
+                val src = if (bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
+                (it as ImageButton).setImageResource(src)
+            }
         }
     }
 
