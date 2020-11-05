@@ -77,7 +77,6 @@ class OverlayService : Service() {
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
             when (it.action) {
@@ -98,7 +97,6 @@ class OverlayService : Service() {
     }
 
     /** Cleans up views just in case. */
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onDestroy() {
         overlayView.hide()
         ViewPagerAutoScrollService.stop(this)
