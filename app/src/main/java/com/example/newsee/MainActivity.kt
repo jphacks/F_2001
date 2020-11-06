@@ -21,6 +21,7 @@ import androidx.viewpager2.widget.ViewPager2
 @RequiresApi(Build.VERSION_CODES.R)
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
+    private var bookmarkListAdapter : BookmarkListAdapter? = null
     private val feedsConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             feedsBinder = binder as FeedsService.FeedsBinder
@@ -55,7 +56,9 @@ class MainActivity : AppCompatActivity() {
         // bookmarksのset
         val bookmarkIntent = Intent(this, BookmarksService::class.java)
         bindService(bookmarkIntent, bookmarksConnection, Context.BIND_AUTO_CREATE)
-        this.startService(bookmarkIntent)
+        BookmarksService.start(this@MainActivity) {
+            bookmarkListAdapter?.notifyDataSetChanged()
+        }
 
         // feedsのfetch
         // TODO: 「インターネットにつないでください」的なアラートを出す
@@ -101,13 +104,13 @@ class MainActivity : AppCompatActivity() {
 
     fun setBookmarkList() {
         bookmarksBinder?.let {
-            val listView = findViewById<NonScrollListView>(R.id.bookmark_list)
-            listView.adapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, it) { link: String ->
+            bookmarkListAdapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, it) { link: String ->
                 val uri = Uri.parse(link)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
             }
+            findViewById<NonScrollListView>(R.id.bookmark_list).adapter = bookmarkListAdapter
         }
     }
 

@@ -16,6 +16,13 @@ class BookmarksService : Service() {
         val realm = Realm.getInstance(realmConfig)
         private val bookmarks = mutableListOf<Bookmark>()
         private val bookmarkLinks = mutableListOf<String>()
+        private lateinit var onBookmarksChanged: () -> Unit
+
+        fun start(context: Context, onBookmarksChanged: () -> Unit) {
+            val intent = Intent(context, BookmarksService::class.java)
+            this.onBookmarksChanged = onBookmarksChanged
+            context.startService(intent)
+        }
 
         fun createFromFeed(feed: Feed) {
            create(
