@@ -14,7 +14,7 @@ import io.realm.RealmResults
 
 
 @RequiresApi(Build.VERSION_CODES.R)
-class BookmarkListAdapter(context: Context, resource: Int, private val results: RealmResults<Bookmark>, private val moveBrowser: ((link: String) -> Unit)?) :
+class BookmarkListAdapter(context: Context, private val resource: Int, private val results: RealmResults<Bookmark>, private val moveBrowser: ((link: String) -> Unit)?) :
     ArrayAdapter<Bookmark>(context, resource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -56,7 +56,7 @@ class BookmarkListAdapter(context: Context, resource: Int, private val results: 
     }
 
     private fun createView(parent: ViewGroup) : View {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.bookmark_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(resource, parent, false)
         view.tag = ItemViewHolder(view)
 
         return view
