@@ -11,6 +11,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -81,17 +82,10 @@ class MainActivity : AppCompatActivity() {
         initTutorialSlide()
         initBookmarkList()
 
-        toolbar = findViewById(R.id.toolbar)
-        // setSupportActionBar(toolbar)
-        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.action_settings -> {
-                    val intent = Intent(applicationContext, SettingActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-            true
-        })
+        findViewById<ImageView>(R.id.action_settings).setOnClickListener {
+            val intent = Intent(applicationContext, SettingActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
