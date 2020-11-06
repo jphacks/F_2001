@@ -15,7 +15,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 private const val NUM_PAGES = 3
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewPager: ViewPager2
     private var feedsBinder : FeedsService.FeedsBinder? = null
     private val feedsConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -26,6 +25,7 @@ class MainActivity : AppCompatActivity() {
             feedsBinder = null
         }
     }
+
     private var bookmarksBinder : BookmarksService.BookmarksBinder? = null
     private val bookmarksConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -72,11 +72,10 @@ class MainActivity : AppCompatActivity() {
         FeedsService.start(this@MainActivity)
 
         // Instantiate a ViewPager2 and a PagerAdapter.
-        viewPager = findViewById(R.id.tutorial_pager)
+        val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
 
-//         The pager adapter, which provides the pages to the view pager widget.
         val pagerAdapter = ScreenSlidePagerAdapter(this)
-        viewPager.adapter = pagerAdapter
+        tutorialViewPager.adapter = pagerAdapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -103,16 +102,7 @@ class MainActivity : AppCompatActivity() {
     private fun isOverlayGranted() =
             Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
                     Settings.canDrawOverlays(this)
-    override fun onBackPressed() {
-        if (viewPager.currentItem == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
-            super.onBackPressed()
-        } else {
-            // Otherwise, select the previous step.
-            viewPager.currentItem = viewPager.currentItem - 1
-        }
-    }
+
     /**
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
