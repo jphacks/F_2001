@@ -5,18 +5,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
-import android.os.*
-import androidx.appcompat.app.AppCompatActivity
+import android.os.Build
+import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
-import android.util.Log
-import android.view.View
-import android.widget.ListView
 import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+
 
 @RequiresApi(Build.VERSION_CODES.R)
 class MainActivity : AppCompatActivity() {
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setBookmarkList() {
         bookmarksBinder?.let {
-            val listView = findViewById<ListView>(R.id.bookmark_list)
+            val listView = findViewById<NonScrollListView>(R.id.bookmark_list)
             listView.adapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, it) { link: String ->
                 val uri = Uri.parse(link)
                 val intent = Intent(Intent.ACTION_VIEW, uri)

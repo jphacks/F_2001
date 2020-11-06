@@ -2,14 +2,15 @@ package com.example.newsee
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+
 
 @RequiresApi(Build.VERSION_CODES.R)
 class BookmarkListAdapter(context: Context, resource: Int, private val binder: BookmarksService.BookmarksBinder, private val moveBrowser: ((link: String) -> Unit)?) :
@@ -26,6 +27,7 @@ class BookmarkListAdapter(context: Context, resource: Int, private val binder: B
         holder.linkButton.setOnClickListener {
             moveBrowser?.invoke(bookmark.link)
         }
+        holder.bookmarkButton
         holder.bookmarkButton.setOnClickListener {
 //            val src = if (!bookmark.bookmarked) {
 //                FeedsService.bookmark(feed)
