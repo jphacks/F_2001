@@ -9,16 +9,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import android.view.Menu
-import android.view.MenuItem
-import androidx.appcompat.widget.Toolbar
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -81,8 +81,17 @@ class MainActivity : AppCompatActivity() {
         initTutorialSlide()
         initBookmarkList()
 
-        toolbar = findViewById(R.id.toolbar);
-        toolbar.inflateMenu(R.menu.setting_icon)
+        toolbar = findViewById(R.id.toolbar)
+        // setSupportActionBar(toolbar)
+        toolbar.setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_settings -> {
+                    val intent = Intent(applicationContext, SettingActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -126,8 +135,8 @@ class MainActivity : AppCompatActivity() {
     private fun requestOverlayPermission() {
         if (isOverlayGranted()) return
         val intent = Intent(
-            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-            Uri.parse("package:$packageName")
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:$packageName")
         )
         startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST_CODE)
     }
@@ -151,8 +160,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        super.onCreateOptionsMenu(menu)
-        menuInflater.inflate(R.menu.setting_icon, menu)
+        // super.onCreateOptionsMenu(menu)
+        // menuInflater.inflate(R.menu.setting_icon, menu)
         return true
     }
 }

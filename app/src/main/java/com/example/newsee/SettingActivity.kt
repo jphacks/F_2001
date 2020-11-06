@@ -9,12 +9,14 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setting_activity)
 
+        /*
         val actionbar = supportActionBar
         //set actionbar title
         actionbar!!.title = "設定"
         //set back button
         actionbar.setDisplayHomeAsUpEnabled(true)
         actionbar.setDisplayHomeAsUpEnabled(true)
+         */
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

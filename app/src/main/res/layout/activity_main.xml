@@ -16,7 +16,8 @@
         android:minHeight="?attr/actionBarSize"
         android:padding="10dp"
         android:theme="?attr/actionBarTheme"
-        app:logo="@drawable/ic_logo" />
+        app:logo="@drawable/ic_logo"
+        app:menu="@menu/setting_icon" />
 
     <ScrollView
         android:layout_width="match_parent"
