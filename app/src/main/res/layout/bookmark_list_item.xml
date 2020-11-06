@@ -9,26 +9,39 @@
     android:elevation="4dp"
     android:background="@drawable/shadow_background">
 
-    <TextView
-        android:id="@+id/feed_title"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="start"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+    <FrameLayout
+        android:layout_columnWeight="48"
+        android:layout_height="30dp"
+        android:layout_width="0dp">
+
+        <TextView
+            android:id="@+id/feed_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start|center_vertical"
+            android:singleLine="true"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:text="ああああああああああああ"/>
+    </FrameLayout>
 
     <ImageButton
         android:id="@+id/detail_button"
-        android:layout_width="40dp"
         android:layout_row="0"
+        android:layout_width="30dp"
+        android:layout_columnWeight="1"
         android:background="#0000"
-        android:src="@drawable/ic_baseline_read_more_24" />
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="-2dp"
+        android:src="@drawable/ic_baseline_open_in_browser_24" />
 
     <ImageButton
         android:id="@+id/bookmark_button"
-        android:layout_width="30dp"
         android:layout_row="0"
+        android:layout_width="30dp"
+        android:layout_columnWeight="1"
         android:background="#0000"
+        android:layout_marginTop="-2dp"
         android:src="@drawable/ic_baseline_bookmark_24" />
 
     <TextView
