@@ -86,7 +86,10 @@ class OverlayService : Service() {
             },
             { link: String ->
                 val uri = Uri.parse(link)
-                startActivity(Intent(Intent.ACTION_VIEW, uri))
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+                hideOverlayView()
             }
         )
     }
@@ -96,16 +99,10 @@ class OverlayService : Service() {
         intent?.let {
             when (it.action) {
                 ACTION_SHOW -> {
-                    isActive = true
-                    overlayView.show()
-                    ViewPagerAutoScrollService.start(this, viewPager)
+                    showOverlayView()
                 }
                 ACTION_HIDE -> {
-                    isActive = false
-                    overlayView.hide()
-                    ViewPagerAutoScrollService.stop(this)
-                    onStopListener()
-                    stopSelf()
+                    hideOverlayView()
                 }
             }
         }
@@ -120,4 +117,18 @@ class OverlayService : Service() {
 
     /** This service does not support binding. */
     override fun onBind(intent: Intent?) = null
+
+    private fun showOverlayView() {
+        isActive = true
+        overlayView.show()
+        ViewPagerAutoScrollService.start(this, viewPager)
+    }
+
+    private fun hideOverlayView() {
+        isActive = false
+        overlayView.hide()
+        ViewPagerAutoScrollService.stop(this)
+        onStopListener()
+        stopSelf()
+    }
 }

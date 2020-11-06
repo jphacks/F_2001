@@ -22,7 +22,7 @@ class BookmarksService : Service() {
 
     companion object {
         private val realmConfig = RealmConfiguration.Builder().allowWritesOnUiThread(true).build()
-        private val realm = Realm.getInstance(realmConfig)
+        val realm = Realm.getInstance(realmConfig)
         private val bookmarks = mutableListOf<Bookmark>()
         private val bookmarkLinks = mutableListOf<String>()
 
