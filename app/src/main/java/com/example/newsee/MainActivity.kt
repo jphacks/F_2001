@@ -15,6 +15,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 private const val NUM_PAGES = 3
 class MainActivity : AppCompatActivity() {
+    private lateinit var viewPager: ViewPager2
     private var feedsBinder : FeedsService.FeedsBinder? = null
     private val feedsConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -25,7 +26,6 @@ class MainActivity : AppCompatActivity() {
             feedsBinder = null
         }
     }
-    private lateinit var viewPager: ViewPager2
     private var bookmarksBinder : BookmarksService.BookmarksBinder? = null
     private val bookmarksConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity() {
         bindService(bookmarkIntent, bookmarksConnection, Context.BIND_AUTO_CREATE)
         this.startService(bookmarkIntent)
 
-        // feedsのfetch
         // TODO: 「インターネットにつないでください」的なアラートを出す
         val feedIntent = Intent(applicationContext, FeedsService::class.java)
         bindService(feedIntent, feedsConnection, Context.BIND_AUTO_CREATE)

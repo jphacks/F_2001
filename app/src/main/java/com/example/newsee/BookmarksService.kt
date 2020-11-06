@@ -1,20 +1,10 @@
 package com.example.newsee
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.*
-import android.util.Log
-import androidx.annotation.RequiresApi
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import java.util.*
 
 
 class BookmarksService : Service() {
