@@ -11,34 +11,38 @@
         android:id="@+id/overlay_slide_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="10dp" >
+        android:paddingLeft="10dp"
+        android:paddingTop="20dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="20dp">
 
         <TextView
             android:id="@+id/feed_title"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="start"
+            android:text="信長の野望 37年売れ続ける訳"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/detail_button"
-            android:layout_row="0"
             android:layout_width="40dp"
+            android:layout_row="0"
             android:background="#0000"
             android:src="@drawable/ic_baseline_read_more_24" />
 
         <ImageButton
             android:id="@+id/bookmark_button"
-            android:layout_row="0"
             android:layout_width="30dp"
+            android:layout_row="0"
             android:background="#0000"
             android:src="@drawable/ic_baseline_bookmark_24" />
 
         <TextView
             android:id="@+id/feed_description"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_row="1"
             android:layout_column="0"
             android:layout_columnSpan="3"
