@@ -37,7 +37,7 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
             if (!feed.bookmarked) {
                 FeedsService.bookmark(feed)
             } else {
-                FeedsService.unBookmark(feed)
+                FeedsService.unBookmark(feed.link)
             }
 
             (it as ImageButton).setImageResource(getBookmarkButtonResource(feed))

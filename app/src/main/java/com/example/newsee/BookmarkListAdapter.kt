@@ -30,7 +30,7 @@ class BookmarkListAdapter(context: Context, resource: Int, private val results: 
             holder.bookmarkButton
             holder.bookmarkButton.setOnClickListener {
                 // ブックマークリストから記事を削除
-                BookmarksService.delete(bookmark.link)
+                FeedsService.unBookmark(bookmark.link)
             }
         }
 

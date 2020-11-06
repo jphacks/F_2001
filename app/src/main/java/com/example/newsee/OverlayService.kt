@@ -35,6 +35,7 @@ class OverlayService : Service() {
 
         private lateinit var feedsBinder : FeedsService.FeedsBinder
         private lateinit var onStopListener : () -> Unit
+        private var movablePagerAdapter: MovablePagerAdapter? = null
 
         fun start(context: Context, binder: FeedsService.FeedsBinder?, listener: () -> Unit) {
             binder ?: return
@@ -54,6 +55,10 @@ class OverlayService : Service() {
             context.startService(intent)
         }
 
+        fun notifyToAdapter() {
+            movablePagerAdapter?.notifyDataSetChanged()
+        }
+
         // To control toggle button in MainActivity. This is not elegant but works.
         var isActive = false
             private set
@@ -71,9 +76,8 @@ class OverlayService : Service() {
 
         // setup overlay view and view pager
         overlayView = OverlayView.create(this)
-        overlayView.findViewById<View>(R.id.pager)
         viewPager = overlayView.findViewById(R.id.pager)
-        viewPager.adapter = MovablePagerAdapter(overlayView, feedsBinder,
+        movablePagerAdapter = MovablePagerAdapter(overlayView, feedsBinder,
             { longClicked: Boolean ->
                 // viewPagerの要素が長押しされたとき / 離されたとき
                 if (longClicked) {
@@ -91,6 +95,7 @@ class OverlayService : Service() {
                 startActivity(intent)
             }
         )
+        viewPager.adapter = movablePagerAdapter
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */

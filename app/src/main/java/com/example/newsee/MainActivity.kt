@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         BookmarksService.start(this@MainActivity) {
             // bookmarkに変化があったときにnotifyする
             bookmarkListAdapter?.notifyDataSetChanged()
+            OverlayService.notifyToAdapter()
         }
 
         // TODO: 「インターネットにつないでください」的なアラートを出す
