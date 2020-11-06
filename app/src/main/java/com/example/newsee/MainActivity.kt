@@ -32,19 +32,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var bookmarksBinder : BookmarksService.BookmarksBinder? = null
-    private val bookmarksConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            bookmarksBinder = binder as BookmarksService.BookmarksBinder
-
-            setBookmarkList()
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            bookmarksBinder = null
-        }
-    }
-
     companion object {
         /** ID for the runtime permission dialog */
         private const val OVERLAY_PERMISSION_REQUEST_CODE = 1
@@ -54,8 +41,6 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         // bookmarksのset
-        val bookmarkIntent = Intent(this, BookmarksService::class.java)
-        bindService(bookmarkIntent, bookmarksConnection, Context.BIND_AUTO_CREATE)
         BookmarksService.start(this@MainActivity) {
             bookmarkListAdapter?.notifyDataSetChanged()
         }
@@ -90,6 +75,8 @@ class MainActivity : AppCompatActivity() {
         val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
         val pagerAdapter = ScreenSlidePagerAdapter(this)
         tutorialViewPager.adapter = pagerAdapter
+
+        setBookmarkList()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -102,16 +89,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(feedsConnection)
+    }
+
     fun setBookmarkList() {
-        bookmarksBinder?.let {
-            bookmarkListAdapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, it) { link: String ->
+            bookmarkListAdapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, BookmarksService.bookmarkResults) { link: String ->
                 val uri = Uri.parse(link)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
             }
             findViewById<NonScrollListView>(R.id.bookmark_list).adapter = bookmarkListAdapter
-        }
     }
 
     /* 必要に応じてユーザに権限をリクエスト */

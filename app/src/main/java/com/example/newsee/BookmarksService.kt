@@ -4,17 +4,16 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.*
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmConfiguration
 
 
 class BookmarksService : Service() {
-    private val binder = BookmarksBinder()
-
     companion object {
         private val realmConfig = RealmConfiguration.Builder().allowWritesOnUiThread(true).build()
         val realm = Realm.getInstance(realmConfig)
-        private val bookmarks = mutableListOf<Bookmark>()
+        val bookmarkResults = realm.where(Bookmark::class.java).findAll()
         private val bookmarkLinks = mutableListOf<String>()
         private lateinit var onBookmarksChanged: () -> Unit
 
@@ -36,38 +35,35 @@ class BookmarksService : Service() {
         }
 
         fun create(bookmark: Bookmark) {
-            if (bookmarkLinks.contains(bookmark.link))
+            if (existsBookmarkOnRealm(bookmark.link))
                 return
             realm.executeTransaction {
                 it.insert(bookmark)
             }
-            bookmarks.add(bookmark)
             bookmarkLinks.add(bookmark.link)
             onBookmarksChanged()
         }
 
         fun delete(link: String) {
+            Log.d("HOGEFUGA", "delete called")
+            if (!existsBookmarkOnRealm(link))
+                return
             realm.executeTransaction {
                 it.where(Bookmark::class.java).equalTo("link", link).findAll().deleteAllFromRealm()
             }
-            bookmarks.removeAll { it.link == link }
             bookmarkLinks.remove(link)
             onBookmarksChanged()
+        }
+
+        fun existsBookmarkOnRealm(link: String): Boolean {
+            return bookmarkLinks.contains(link) && realm.where(Bookmark::class.java).equalTo("link", link).findFirst() != null
         }
     }
 
     override fun onCreate() {
-        bookmarks.addAll(realm.where(Bookmark::class.java).findAll().toList())
-        bookmarkLinks.addAll(bookmarks.map { it.link })
+        bookmarkLinks.addAll(bookmarkResults.toList().map { it.link })
         super.onCreate()
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return binder
-    }
-
-    inner class BookmarksBinder : Binder() {
-        // Return this instance of LocalService so clients can call public methods
-        fun getBookmarks() = bookmarks
-    }
+    override fun onBind(intent: Intent?) = null
 }
