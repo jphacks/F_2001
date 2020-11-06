@@ -20,6 +20,9 @@ import androidx.viewpager2.widget.ViewPager2
 
 @RequiresApi(Build.VERSION_CODES.R)
 class MainActivity : AppCompatActivity() {
+    // bookmarks
+    private var bookmarkListAdapter : BookmarkListAdapter? = null
+    // feeds
     private var feedsBinder : FeedsService.FeedsBinder? = null
     private val feedsConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
@@ -31,19 +34,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var bookmarksBinder : BookmarksService.BookmarksBinder? = null
-    private val bookmarksConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            bookmarksBinder = binder as BookmarksService.BookmarksBinder
-
-            setBookmarkList()
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            bookmarksBinder = null
-        }
-    }
-
     companion object {
         /** ID for the runtime permission dialog */
         private const val OVERLAY_PERMISSION_REQUEST_CODE = 1
@@ -52,12 +42,11 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        // bookmarksのset
-        val bookmarkIntent = Intent(this, BookmarksService::class.java)
-        bindService(bookmarkIntent, bookmarksConnection, Context.BIND_AUTO_CREATE)
-        this.startService(bookmarkIntent)
+        BookmarksService.start(this@MainActivity) {
+            // bookmarkに変化があったときにnotifyする
+            bookmarkListAdapter?.notifyDataSetChanged()
+        }
 
-        // feedsのfetch
         // TODO: 「インターネットにつないでください」的なアラートを出す
         val feedIntent = Intent(applicationContext, FeedsService::class.java)
         bindService(feedIntent, feedsConnection, Context.BIND_AUTO_CREATE)
@@ -76,17 +65,15 @@ class MainActivity : AppCompatActivity() {
             setOnCheckedChangeListener { view, isChecked ->
                 if (isChecked)
                     OverlayService.start(this@MainActivity, feedsBinder) {
+                        // ボタン以外でオーバーレイが閉じられたときに切り替え
                         view.isChecked = false
                     }
                 else
                     OverlayService.stop(this@MainActivity)
             }
         }
-
-        // Instantiate a ViewPager2 and a PagerAdapter.
-        val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
-        val pagerAdapter = ScreenSlidePagerAdapter(this)
-        tutorialViewPager.adapter = pagerAdapter
+        initTutorialSlide()
+        initBookmarkList()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -99,16 +86,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setBookmarkList() {
-        bookmarksBinder?.let {
-            val listView = findViewById<NonScrollListView>(R.id.bookmark_list)
-            listView.adapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, it) { link: String ->
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(feedsConnection)
+    }
+
+    private fun initTutorialSlide() {
+        val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
+        val pagerAdapter = ScreenSlidePagerAdapter(this)
+        tutorialViewPager.adapter = pagerAdapter
+    }
+
+    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
+        override fun getItemCount(): Int = 3
+
+        override fun createFragment(position: Int): Fragment = ScreenSlidePagerFragment()
+    }
+
+    private fun initBookmarkList() {
+            bookmarkListAdapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, BookmarksService.bookmarkResults) { link: String ->
                 val uri = Uri.parse(link)
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
             }
-        }
+            findViewById<NonScrollListView>(R.id.bookmark_list).adapter = bookmarkListAdapter
     }
 
     /* 必要に応じてユーザに権限をリクエスト */
@@ -123,16 +125,5 @@ class MainActivity : AppCompatActivity() {
 
     /** オーバーレイの権限があるかどうかチェック */
     private fun isOverlayGranted() =
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
-                    Settings.canDrawOverlays(this)
-
-    /**
-     * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
-     * sequence.
-     */
-    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun getItemCount(): Int = 3
-
-        override fun createFragment(position: Int): Fragment = ScreenSlidePagerFragment()
-    }
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
 }
