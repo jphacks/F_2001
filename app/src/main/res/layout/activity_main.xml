@@ -79,13 +79,13 @@
             <com.example.newsee.NonScrollListView
                 android:id="@+id/bookmark_list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:divider="@null"
                 android:clipToPadding="false"
                 android:paddingHorizontal="5dp"
                 android:paddingVertical="10dp"
-                android:dividerHeight="10dp" />
+                android:dividerHeight="15dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

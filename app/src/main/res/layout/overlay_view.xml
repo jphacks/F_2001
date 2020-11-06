@@ -7,5 +7,5 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="120dp" />
+        android:layout_height="130dp" />
 </com.example.newsee.OverlayView>

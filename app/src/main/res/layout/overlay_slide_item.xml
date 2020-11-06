@@ -1,50 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:orientation="vertical"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+    android:id="@+id/feed_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#CCC4C4C4" >
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="20dp"
+    android:background="@drawable/overlay_item_background">
 
-    <GridLayout
-        android:id="@+id/overlay_slide_grid"
+    <TextView
+        android:id="@+id/feed_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:singleLine="true"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/detail_button"
+        android:layout_toStartOf="@id/bookmark_button"
+        android:layout_toLeftOf="@id/bookmark_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#0000"
+        android:layout_marginTop="-2dp"
+        android:src="@drawable/ic_baseline_open_in_browser_24" />
+
+    <ImageButton
+        android:id="@+id/bookmark_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#0000"
+        android:layout_marginTop="-2dp"
+        android:src="@drawable/ic_baseline_bookmark_24" />
+
+    <TextView
+        android:id="@+id/feed_description"
+        android:layout_below="@id/feed_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp" >
-
-        <TextView
-            android:id="@+id/feed_title"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="start"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/detail_button"
-            android:layout_row="0"
-            android:layout_width="40dp"
-            android:background="#0000"
-            android:src="@drawable/ic_baseline_read_more_24" />
-
-        <ImageButton
-            android:id="@+id/bookmark_button"
-            android:layout_row="0"
-            android:layout_width="30dp"
-            android:background="#0000"
-            android:src="@drawable/ic_baseline_bookmark_border_24" />
-
-        <TextView
-            android:id="@+id/feed_description"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_columnSpan="3"
-            android:layout_gravity="start"
-            android:layout_marginTop="5dp"
-            android:textSize="12sp"
-            android:maxLines="3" />
-    </GridLayout>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="10dp"
+        android:textSize="13sp"
+        android:maxLines="3" />
+</RelativeLayout>

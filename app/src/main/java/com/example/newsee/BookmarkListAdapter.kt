@@ -47,7 +47,7 @@ class BookmarkListAdapter(context: Context, private val resource: Int, private v
 
         init {
             itemView.apply {
-                titleText = findViewById(R.id.feed_title)
+                titleText = findViewById(R.id.bookmark_title)
                 descriptionText = findViewById(R.id.feed_description)
                 linkButton = findViewById(R.id.detail_button)
                 bookmarkButton = findViewById(R.id.bookmark_button)
