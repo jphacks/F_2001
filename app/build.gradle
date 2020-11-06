@@ -34,6 +34,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     ext.tikxml_version = '0.8.13'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
