@@ -37,8 +37,8 @@ class FeedsService : Service() {
             }
         }
 
-        fun unbookmark(feed: Feed) {
-            BookmarksService.deleteFromFeed(feed)
+        fun unBookmark(feed: Feed) {
+            BookmarksService.delete(feed.link)
             feeds.replaceAll {
                 if (it.link == feed.link) it.apply { bookmarked = false } else it
             }

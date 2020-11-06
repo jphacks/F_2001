@@ -34,7 +34,7 @@
             android:layout_row="0"
             android:layout_width="30dp"
             android:background="#0000"
-            android:src="@drawable/ic_baseline_bookmark_border_24" />
+            android:src="@drawable/ic_baseline_bookmark_24" />
 
         <TextView
             android:id="@+id/feed_description"

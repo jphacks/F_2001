@@ -1,6 +1,7 @@
 package com.example.newsee
 
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.*
 import io.realm.Realm
@@ -17,28 +18,34 @@ class BookmarksService : Service() {
         private val bookmarkLinks = mutableListOf<String>()
 
         fun createFromFeed(feed: Feed) {
-            val bookmark = Bookmark(
-                title = feed.title,
-                description = feed.description,
-                link = feed.link,
-                pubDate = feed.pubDate
-            )
+           create(
+               Bookmark(
+                    title = feed.title,
+                    description = feed.description,
+                    link = feed.link,
+                    pubDate = feed.pubDate
+               )
+           )
+        }
 
-            if (bookmarkLinks.contains(feed.link))
+        fun create(bookmark: Bookmark) {
+            if (bookmarkLinks.contains(bookmark.link))
                 return
             realm.executeTransaction {
                 it.insert(bookmark)
             }
             bookmarks.add(bookmark)
-            bookmarkLinks.add(feed.link)
+            bookmarkLinks.add(bookmark.link)
+            onBookmarksChanged()
         }
 
-        fun deleteFromFeed(feed: Feed) {
+        fun delete(link: String) {
             realm.executeTransaction {
-                it.where(Bookmark::class.java).equalTo("link", feed.link).findAll().deleteAllFromRealm()
+                it.where(Bookmark::class.java).equalTo("link", link).findAll().deleteAllFromRealm()
             }
-            bookmarks.removeAll { it.link == feed.link }
-            bookmarkLinks.remove(feed.link)
+            bookmarks.removeAll { it.link == link }
+            bookmarkLinks.remove(link)
+            onBookmarksChanged()
         }
     }
 

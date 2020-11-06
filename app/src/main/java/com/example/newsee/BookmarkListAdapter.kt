@@ -29,16 +29,8 @@ class BookmarkListAdapter(context: Context, resource: Int, private val binder: B
         }
         holder.bookmarkButton
         holder.bookmarkButton.setOnClickListener {
-//            val src = if (!bookmark.bookmarked) {
-//                FeedsService.bookmark(feed)
-//                R.drawable.ic_baseline_bookmark_24
-//            } else {
-//                // ブックマークリストから記事を削除
-//                FeedsService.unbookmark(feed)
-//                R.drawable.ic_baseline_bookmark_border_24
-//            }
-//
-//            (it as ImageButton).setImageResource(src)
+            // ブックマークリストから記事を削除
+            BookmarksService.delete(bookmark.link)
         }
 
         return view

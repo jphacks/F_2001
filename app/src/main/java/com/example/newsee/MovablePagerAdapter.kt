@@ -43,7 +43,7 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
                 R.drawable.ic_baseline_bookmark_24
             } else {
                 // ブックマークリストから記事を削除
-                FeedsService.unbookmark(feed)
+                FeedsService.unBookmark(feed)
                 R.drawable.ic_baseline_bookmark_border_24
             }
 
