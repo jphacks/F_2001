@@ -34,18 +34,18 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
             moveBrowser?.invoke(feed.link)
         }
         holder.bookmarkButton.setOnClickListener {
-            val src = if (!feed.bookmarked) {
+            if (!feed.bookmarked) {
                 FeedsService.bookmark(feed)
-                R.drawable.ic_baseline_bookmark_24
             } else {
-                // ブックマークリストから記事を削除
                 FeedsService.unBookmark(feed)
-                R.drawable.ic_baseline_bookmark_border_24
             }
 
-            (it as ImageButton).setImageResource(src)
+            (it as ImageButton).setImageResource(getBookmarkButtonResource(feed))
         }
+        holder.bookmarkButton.setImageResource(getBookmarkButtonResource(feed))
     }
+
+    private fun getBookmarkButtonResource(feed : Feed) = if (feed.bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleText: TextView
