@@ -29,18 +29,20 @@ import androidx.viewpager2.widget.ViewPager2
 @RequiresApi(Build.VERSION_CODES.R)
 class OverlayService : Service() {
     companion object {
-        private const val ACTION_SHOW = "SHOW"
-        private const val ACTION_HIDE = "HIDE"
+        const val ACTION_SHOW = "SHOW"
+        const val ACTION_HIDE = "HIDE"
 
         private lateinit var feedsBinder : FeedsService.FeedsBinder
+        private lateinit var onStopListener : () -> Unit
 
-        fun start(context: Context, binder: FeedsService.FeedsBinder?) {
+        fun start(context: Context, binder: FeedsService.FeedsBinder?, listener: () -> Unit) {
             binder ?: return
 
             val intent = Intent(context, OverlayService::class.java).apply {
                 action = ACTION_SHOW
             }
             feedsBinder = binder
+            onStopListener = listener
             context.startService(intent)
         }
 
@@ -60,6 +62,12 @@ class OverlayService : Service() {
     private lateinit var viewPager: ViewPager2
 
     override fun onCreate() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Start as a foreground service
+            val notification = OverlayNotification.build(this)
+            startForeground(1, notification)
+        }
+
         // setup overlay view and view pager
         overlayView = OverlayView.create(this)
         overlayView.findViewById<View>(R.id.pager)
@@ -89,6 +97,7 @@ class OverlayService : Service() {
                     isActive = false
                     overlayView.hide()
                     ViewPagerAutoScrollService.stop(this)
+                    onStopListener()
                     stopSelf()
                 }
             }

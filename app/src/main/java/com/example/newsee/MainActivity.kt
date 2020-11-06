@@ -48,9 +48,11 @@ class MainActivity : AppCompatActivity() {
         // Show/hide overlay view with a toggle button.
         findViewById<ToggleButton>(R.id.toggle_button).apply {
             isChecked = OverlayService.isActive
-            setOnCheckedChangeListener { _, isChecked ->
+            setOnCheckedChangeListener { view, isChecked ->
                 if (isChecked)
-                    OverlayService.start(this@MainActivity, feedsBinder)
+                    OverlayService.start(this@MainActivity, feedsBinder) {
+                        view.isChecked = false
+                    }
                 else
                     OverlayService.stop(this@MainActivity)
             }

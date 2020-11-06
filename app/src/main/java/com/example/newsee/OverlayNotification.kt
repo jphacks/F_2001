@@ -14,11 +14,10 @@ object OverlayNotification {
     private const val CHANNEL_ID = "channel_id_overlay_sample"
     private const val CHANNEL_NAME = "オーバーレイ表示の切り替え"
     private const val CHANNEL_IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT
-    private const val FIRST_LINE = "オーバーレイ表示中"
-    private const val SECOND_LINE = "ここから表示・非表示を切り替えられます。"
+    private const val FIRST_LINE = "ニュース配信中"
+    private const val SECOND_LINE = "タップで非表示"
 
     fun build(context: Context): Notification {
-        // Create a notification channel
         val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         nm.createNotificationChannel(
             NotificationChannel(CHANNEL_ID, CHANNEL_NAME, CHANNEL_IMPORTANCE)
