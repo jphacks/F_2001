@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 
 
@@ -106,8 +107,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initTutorialSlide() {
         val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
-        val pagerAdapter = TutorialPagerAdapter(this)
-        tutorialViewPager.adapter = pagerAdapter
+        // space between 5 * 2 dp
+        tutorialViewPager.setPageTransformer(MarginPageTransformer(dpTopx(10, this).toInt()))
+        tutorialViewPager.adapter = TutorialPagerAdapter(this)
     }
 
     private fun initBookmarkList() {

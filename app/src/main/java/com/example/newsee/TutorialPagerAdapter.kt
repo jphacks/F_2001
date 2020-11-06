@@ -22,8 +22,14 @@ class TutorialPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
             private data class SlideItem(val title: String, val description: String, val image: Int)
 
             private val slideItems = listOf(
-                SlideItem("STEP1", "hoge", R.drawable.shoebill),
-                SlideItem("STEP2", "fuga", R.drawable.shoebill),
+                SlideItem("STEP1", """
+                    右上の表示OFFボタンで表示を切り替え。
+                    ニュースが表示されるようになります。
+                """.trimIndent(), R.drawable.shoebill),
+                SlideItem("STEP2", """
+                    気になったニュースは、すぐチェックできます。
+                    時間がない時にはブックマークも。
+                """.trimIndent(), R.drawable.shoebill),
                 SlideItem("STEP3", "piyo", R.drawable.shoebill)
             )
 
