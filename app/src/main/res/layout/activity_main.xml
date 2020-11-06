@@ -14,7 +14,10 @@
         android:layout_height="54dp"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        android:padding="10dp"
+        android:paddingLeft="0dp"
+        android:paddingTop="15dp"
+        android:paddingRight="0dp"
+        android:paddingBottom="15dp"
         android:theme="?attr/actionBarTheme"
         app:logo="@drawable/ic_logo" />
 
@@ -24,8 +27,8 @@
         android:clipToPadding="true"
         android:gravity="right"
         android:orientation="horizontal"
-        android:scrollbars="none"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -53,11 +56,21 @@
                 android:layout_height="200dp"
                 android:orientation="horizontal" />
 
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ブックマーク"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
             <com.example.newsee.NonScrollListView
                 android:id="@+id/bookmark_list"
-                android:divider="@color/black"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:divider="@color/gray"
+                android:dividerHeight="1dp"/>
         </LinearLayout>
     </ScrollView>
+
 </LinearLayout>
