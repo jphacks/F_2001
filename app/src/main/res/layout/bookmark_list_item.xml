@@ -25,7 +25,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="#0000"
-        android:layout_marginTop="-2dp"
+        android:layout_marginTop="-4dp"
         android:src="@drawable/ic_baseline_open_in_browser_24" />
 
     <ImageButton
@@ -35,7 +35,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:background="#0000"
-        android:layout_marginTop="-2dp"
+        android:layout_marginTop="-4dp"
         android:src="@drawable/ic_baseline_bookmark_24" />
 
     <TextView

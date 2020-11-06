@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
             feedsBinder = null
         }
     }
-    // toolbar
-    private lateinit var toolbar: Toolbar
 
     companion object {
         /** ID for the runtime permission dialog */

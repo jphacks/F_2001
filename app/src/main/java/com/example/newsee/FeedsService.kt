@@ -100,6 +100,7 @@ class FeedsService : Service() {
                         }
                         feeds.addAll(newFeeds)
                         existingFeedLinks.addAll(newFeeds.map { it.link })
+                        OverlayService.notifyToAdapter()
                     }
                 } else {
                     Log.d("NOT SUCCESS", response.toString())

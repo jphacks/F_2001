@@ -33,7 +33,7 @@ object OverlayNotification {
             .setContentIntent(pendingIntent)  // The intent to send when the entry is clicked
             .setContentTitle(FIRST_LINE)  // the label of the entry
             .setContentText(SECOND_LINE)  // the contents of the entry
-            .setSmallIcon(R.drawable.shoebill)  // the status icon
+            .setSmallIcon(R.drawable.ic_logo_icon)  // the status icon
             .setTicker(context.getText(R.string.app_name))  // the status text
             .setWhen(System.currentTimeMillis())  // the time stamp
             .addAction(notificationAction)

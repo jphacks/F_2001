@@ -78,6 +78,7 @@ class OverlayService : Service() {
         // setup overlay view and view pager
         overlayView = OverlayView.create(this)
         viewPager = overlayView.findViewById(R.id.pager)
+
         movablePagerAdapter = MovablePagerAdapter(overlayView, feedsBinder,
             { longClicked: Boolean ->
                 // viewPagerの要素が長押しされたとき / 離されたとき
@@ -133,6 +134,7 @@ class OverlayService : Service() {
         isActive = false
         overlayView.hide()
         ViewPagerAutoScrollService.stop(this)
+        ViewPagerAutoScrollService.currentItem = viewPager.currentItem
         onStopListener()
         stopSelf()
     }
