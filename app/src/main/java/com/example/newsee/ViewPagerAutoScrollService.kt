@@ -72,7 +72,7 @@ class ViewPagerAutoScrollService : Service() {
                     }
                 })
             }
-        }, 5000, 5000)
+        }, 10000, 10000)
     }
 
     private fun stopTimer() {

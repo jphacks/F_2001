@@ -29,8 +29,6 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
     override fun getItemCount(): Int = binder.getFeeds().size
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val realm = Realm.getDefaultInstance()
-
         val feed = binder.getFeeds()[position]
         holder.titleText.text = feed.title
         holder.descriptionText.text = feed.description
@@ -38,33 +36,20 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
             Log.d("Detail Button", "clicked.")
         }
         holder.bookmarkButton.setOnClickListener {
-            holder.bookmarked = !holder.bookmarked
-
-            realm.beginTransaction()
-
-            val src = if (holder.bookmarked) {
-                // ブックマークリストに記事を追加
-                realm.insert(Bookmark(
-                    title = feed.title,
-                    description = feed.description,
-                    link = feed.link,
-                    pubDate = feed.pubDate
-                ))
+            val src = if (!feed.bookmarked) {
+                FeedsService.bookmark(feed)
                 R.drawable.ic_baseline_bookmark_24
             } else {
                 // ブックマークリストから記事を削除
-                realm.where(Bookmark::class.java).equalTo("link", feed.link).findAll().deleteAllFromRealm()
+                FeedsService.unbookmark(feed)
                 R.drawable.ic_baseline_bookmark_border_24
             }
-
-            realm.commitTransaction()
 
             (it as ImageButton).setImageResource(src)
         }
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var bookmarked = false
         val titleText: TextView
         val descriptionText: TextView
         val linkButton: ImageButton

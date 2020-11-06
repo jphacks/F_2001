@@ -14,21 +14,34 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import java.util.*
 
-
-/**
- * A background service for fetching RSS feeds.
- */
+@RequiresApi(Build.VERSION_CODES.N)
 class FeedsService : Service() {
     private var timer: Timer? = null
     private val fetchHandler = Handler(Looper.getMainLooper())
     private val binder = FeedsBinder()
-    private val feeds = mutableListOf<Feed>()
     private val existingFeedLinks = mutableListOf<String>()
 
+
     companion object {
+        private val feeds = mutableListOf<Feed>()
+
         fun start(context: Context) {
             val intent = Intent(context, FeedsService::class.java)
             context.startService(intent)
+        }
+
+        fun bookmark(feed: Feed) {
+            BookmarksService.createFromFeed(feed)
+            feeds.replaceAll {
+                if (it.link == feed.link) it.apply { bookmarked = true } else it
+            }
+        }
+
+        fun unbookmark(feed: Feed) {
+            BookmarksService.deleteFromFeed(feed)
+            feeds.replaceAll {
+                if (it.link == feed.link) it.apply { bookmarked = false } else it
+            }
         }
     }
 
@@ -68,6 +81,7 @@ class FeedsService : Service() {
                 .client(OkHttpClient.Builder().build())
                 .addConverterFactory(TikXmlConverterFactory.create())
                 .build()
+        val bookmarkLinks = BookmarksService.realm.where(Bookmark::class.java).findAll().toList().map { it.link }
 
         retrofit.create(FeedApi::class.java).fetchFeeds(endpoint).enqueue(object : Callback<YahooFeedsResponse> {
             //非同期処理
@@ -84,7 +98,8 @@ class FeedsService : Service() {
                                     title = item.title,
                                     description = item.description,
                                     pubDate = item.pubDate,
-                                    link = item.link
+                                    link = item.link,
+                                    bookmarked = bookmarkLinks.contains(item.link)
                                 )
                             )
                             existingFeedLinks.add(item.link)

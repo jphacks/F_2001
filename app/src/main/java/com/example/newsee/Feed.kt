@@ -9,7 +9,8 @@ data class Feed(
     var title: String,
     var description: String,
     var link: String,
-    var pubDate: String
+    var pubDate: String,
+    var bookmarked: Boolean = false
 )
 
 open class Bookmark(
