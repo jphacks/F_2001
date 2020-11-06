@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -64,6 +65,7 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
             setOnLongClickListener {
                 isLongClick = true
                 isFirstMove = true
+                it.findViewById<GridLayout>(R.id.overlay_slide_grid).setBackgroundResource(R.drawable.border_line)
 
                 notifyLongClick?.invoke(true)
 
@@ -96,6 +98,8 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
                                 isLongClick = false
                                 notifyLongClick?.invoke(false)
                             }
+                            view.findViewById<GridLayout>(R.id.overlay_slide_grid).background = null
+
                             view.performClick()
                         }
                     }
