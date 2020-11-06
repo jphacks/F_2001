@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             bookmarksBinder = binder as BookmarksService.BookmarksBinder
 
-            setAdapter()
+            setBookmarkList()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -99,13 +99,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun setAdapter() {
-        val listView = findViewById<ListView>(R.id.bookmark_list)
-        listView.adapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, bookmarksBinder) { link: String ->
-            val uri = Uri.parse(link)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(intent)
+    fun setBookmarkList() {
+        bookmarksBinder?.let {
+            val listView = findViewById<ListView>(R.id.bookmark_list)
+            listView.adapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, it) { link: String ->
+                val uri = Uri.parse(link)
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
+            }
         }
     }
 

@@ -12,13 +12,12 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.R)
-class BookmarkListAdapter(context: Context, resource: Int, private val binder: BookmarksService.BookmarksBinder?, private val moveBrowser: ((link: String) -> Unit)?) :
+class BookmarkListAdapter(context: Context, resource: Int, private val binder: BookmarksService.BookmarksBinder, private val moveBrowser: ((link: String) -> Unit)?) :
     ArrayAdapter<Bookmark>(context, resource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: createView(parent)
         val holder = view.tag as ItemViewHolder
-        binder ?: return view
 
         val bookmark = binder.getBookmarks()[position]
 
@@ -43,7 +42,7 @@ class BookmarkListAdapter(context: Context, resource: Int, private val binder: B
         return view
     }
 
-    override fun getCount() = binder?.getBookmarks()?.size ?: 3
+    override fun getCount() = binder.getBookmarks().size
 
     inner class ItemViewHolder(itemView: View) {
         val titleText: TextView
