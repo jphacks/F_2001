@@ -1,6 +1,7 @@
 package com.example.newsee
 
 import android.graphics.Point
+import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.util.Log
@@ -13,10 +14,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
+import io.realm.Realm
 
 @RequiresApi(Build.VERSION_CODES.R)
-class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?) :
+class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?, private val moveBrowser: ((link: String) -> Unit)?) :
         RecyclerView.Adapter<MovablePagerAdapter.ItemViewHolder>() {
 
     private var isLongClick: Boolean = false
@@ -33,28 +34,35 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
         val feed = binder.getFeeds()[position]
         holder.titleText.text = feed.title
         holder.descriptionText.text = feed.description
+        holder.linkButton.setOnClickListener {
+            moveBrowser?.invoke(feed.link)
+        }
+        holder.bookmarkButton.setOnClickListener {
+            val src = if (!feed.bookmarked) {
+                FeedsService.bookmark(feed)
+                R.drawable.ic_baseline_bookmark_24
+            } else {
+                // ブックマークリストから記事を削除
+                FeedsService.unbookmark(feed)
+                R.drawable.ic_baseline_bookmark_border_24
+            }
+
+            (it as ImageButton).setImageResource(src)
+        }
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var bookmarked = false
         val titleText: TextView
         val descriptionText: TextView
+        val linkButton: ImageButton
+        val bookmarkButton: ImageButton
 
         init {
             itemView.apply {
                 titleText = findViewById(R.id.feed_title)
-                descriptionText =findViewById(R.id.feed_description)
-
-                findViewById<ImageButton>(R.id.detail_button).setOnClickListener {
-                    Log.d("Detail Button", "clicked.")
-                }
-                findViewById<ImageButton>(R.id.bookmark_button).setOnClickListener {
-                    Log.d("Bookmark Button", "clicked." + bookmarked)
-                    bookmarked = !bookmarked
-
-                    val src = if (bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
-                    (it as ImageButton).setImageResource(src)
-                }
+                descriptionText = findViewById(R.id.feed_description)
+                linkButton = findViewById(R.id.detail_button)
+                bookmarkButton = findViewById(R.id.bookmark_button)
             }
             itemView.apply(clickListener())
         }
