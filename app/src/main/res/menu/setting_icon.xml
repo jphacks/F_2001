@@ -4,6 +4,12 @@
 
     <item android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings_24"
+        android:theme="?attr/actionBarTheme"
+        android:minHeight="?attr/actionBarSize"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end|top"
         app:showAsAction="always"/>
 
 </menu>

@@ -18,6 +18,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.widget.Toolbar
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
             feedsBinder = null
         }
     }
+    // toolbar
+    private lateinit var toolbar: Toolbar
 
     companion object {
         /** ID for the runtime permission dialog */
@@ -74,8 +77,12 @@ class MainActivity : AppCompatActivity() {
                     OverlayService.stop(this@MainActivity)
             }
         }
+
         initTutorialSlide()
         initBookmarkList()
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.inflateMenu(R.menu.setting_icon)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
