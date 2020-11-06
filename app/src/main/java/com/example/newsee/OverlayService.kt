@@ -89,7 +89,6 @@ class OverlayService : Service() {
                 val intent = Intent(Intent.ACTION_VIEW, uri)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
-                hideOverlayView()
             }
         )
     }
