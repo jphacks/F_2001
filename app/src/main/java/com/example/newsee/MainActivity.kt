@@ -50,12 +50,13 @@ class MainActivity : AppCompatActivity() {
             isChecked = OverlayService.isActive
             setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked)
-                    OverlayService.start(this@MainActivity)
+                    OverlayService.start(this@MainActivity, feedsBinder)
                 else
                     OverlayService.stop(this@MainActivity)
             }
         }
 
+        // TODO: 「インターネットにつないでください」的なアラートを出す
         val intent = Intent(applicationContext, FeedsService::class.java)
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
 

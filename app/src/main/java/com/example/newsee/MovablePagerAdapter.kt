@@ -1,6 +1,7 @@
 package com.example.newsee
 
 import android.graphics.Point
+import android.os.Binder
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,42 +9,50 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 
 @RequiresApi(Build.VERSION_CODES.R)
-class MovablePagerAdapter(private val overlayView: OverlayView, private val targetPager: ViewPager2) :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?) :
+        RecyclerView.Adapter<MovablePagerAdapter.ItemViewHolder>() {
 
-    // TODO: itemsを渡す (bind?)
-    val items = mutableListOf<Any>()
     private var isLongClick: Boolean = false
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovablePagerAdapter.ItemViewHolder =
             ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overlay_slide_item, parent, false))
 
-    override fun getItemCount(): Int = 5
+    override fun getItemCount(): Int = binder.getFeeds().size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        // bind your items
+    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        val feed = binder.getFeeds()[position]
+        holder.titleText.text = feed.title
+        holder.descriptionText.text = feed.description
     }
 
-    private inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private var bookmarked = false
+        val titleText: TextView
+        val descriptionText: TextView
 
         init {
-            itemView.apply(clickListener())
-            itemView.findViewById<ImageButton>(R.id.detail_button).setOnClickListener {
-                Log.d("Detail Button", "clicked.")
-            }
-            itemView.findViewById<ImageButton>(R.id.bookmark_button).setOnClickListener {
-                Log.d("Bookmark Button", "clicked." + bookmarked)
-                bookmarked = !bookmarked
+            itemView.apply {
+                titleText = findViewById(R.id.feed_title)
+                descriptionText =findViewById(R.id.feed_description)
 
-                val src = if (bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
-                (it as ImageButton).setImageResource(src)
+                findViewById<ImageButton>(R.id.detail_button).setOnClickListener {
+                    Log.d("Detail Button", "clicked.")
+                }
+                findViewById<ImageButton>(R.id.bookmark_button).setOnClickListener {
+                    Log.d("Bookmark Button", "clicked." + bookmarked)
+                    bookmarked = !bookmarked
+
+                    val src = if (bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
+                    (it as ImageButton).setImageResource(src)
+                }
             }
+            itemView.apply(clickListener())
         }
     }
 
@@ -51,15 +60,14 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
         return {
             setOnLongClickListener {
                 isLongClick = true
-                targetPager.isUserInputEnabled = false
+                notifyLongClick?.invoke(true)
+
                 false
             }.apply {
                 setOnTouchListener { view, motionEvent ->
                     when (motionEvent.action) {
                         MotionEvent.ACTION_MOVE -> {
                             if (isLongClick) {
-                                // TODO: スクロールを止める
-
                                 // NOTE: deprecatedですが, Android 8で動くようにするためです
                                 val display = overlayView.windowManager.defaultDisplay
                                 val size = Point()
@@ -79,9 +87,8 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val targ
                         }
                         MotionEvent.ACTION_UP -> {
                             if (isLongClick) {
-                                // TODO: スクロールを再開
                                 isLongClick = false
-                                targetPager.isUserInputEnabled = true
+                                notifyLongClick?.invoke(false)
                             }
                             view.performClick()
                         }

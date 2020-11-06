@@ -11,6 +11,7 @@
     android:background="#CCC4C4C4">
 
     <TextView
+        android:id="@+id/feed_title"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_gravity="start"
@@ -33,6 +34,7 @@
         android:src="@drawable/ic_baseline_bookmark_border_24" />
 
     <TextView
+        android:id="@+id/feed_description"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_row="1"

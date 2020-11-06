@@ -29,8 +29,8 @@ class OverlayView @JvmOverloads constructor(
 
     /** Settings for overlay view */
      val layoutParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.WRAP_CONTENT,  // Overlay レイヤに表示
-            WindowManager.LayoutParams.WRAP_CONTENT,  // Overlay レイヤに表示
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,  // Overlay レイヤに表示
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE  // フォーカスを奪わない
                     or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
