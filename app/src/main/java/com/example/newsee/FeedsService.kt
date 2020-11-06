@@ -21,7 +21,6 @@ class FeedsService : Service() {
     private val binder = FeedsBinder()
     private val existingFeedLinks = mutableListOf<String>()
 
-
     companion object {
         private val feeds = mutableListOf<Feed>()
 
