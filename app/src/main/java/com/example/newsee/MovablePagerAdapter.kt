@@ -1,10 +1,7 @@
 package com.example.newsee
 
 import android.graphics.Point
-import android.net.Uri
-import android.os.Binder
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -14,7 +11,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.Realm
 
 @RequiresApi(Build.VERSION_CODES.R)
 class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?, private val moveBrowser: ((link: String) -> Unit)?) :
