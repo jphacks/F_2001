@@ -84,8 +84,7 @@ class FeedsService : Service() {
                                     title = item.title,
                                     description = item.description,
                                     pubDate = item.pubDate,
-                                    link = item.link,
-                                    comments = item.comments
+                                    link = item.link
                                 )
                             )
                             existingFeedLinks.add(item.link)

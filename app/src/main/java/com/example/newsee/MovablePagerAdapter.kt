@@ -1,7 +1,6 @@
 package com.example.newsee
 
 import android.graphics.Point
-import android.os.Binder
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +12,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
+import io.realm.Realm
 
 @RequiresApi(Build.VERSION_CODES.R)
 class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?) :
@@ -30,31 +29,53 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
     override fun getItemCount(): Int = binder.getFeeds().size
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        val realm = Realm.getDefaultInstance()
+
         val feed = binder.getFeeds()[position]
         holder.titleText.text = feed.title
         holder.descriptionText.text = feed.description
+        holder.linkButton.setOnClickListener {
+            Log.d("Detail Button", "clicked.")
+        }
+        holder.bookmarkButton.setOnClickListener {
+            holder.bookmarked = !holder.bookmarked
+
+            realm.beginTransaction()
+
+            val src = if (holder.bookmarked) {
+                // ブックマークリストに記事を追加
+                realm.insert(Bookmark(
+                    title = feed.title,
+                    description = feed.description,
+                    link = feed.link,
+                    pubDate = feed.pubDate
+                ))
+                R.drawable.ic_baseline_bookmark_24
+            } else {
+                // ブックマークリストから記事を削除
+                realm.where(Bookmark::class.java).equalTo("link", feed.link).findAll().deleteAllFromRealm()
+                R.drawable.ic_baseline_bookmark_border_24
+            }
+
+            realm.commitTransaction()
+
+            (it as ImageButton).setImageResource(src)
+        }
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private var bookmarked = false
+        var bookmarked = false
         val titleText: TextView
         val descriptionText: TextView
+        val linkButton: ImageButton
+        val bookmarkButton: ImageButton
 
         init {
             itemView.apply {
                 titleText = findViewById(R.id.feed_title)
-                descriptionText =findViewById(R.id.feed_description)
-
-                findViewById<ImageButton>(R.id.detail_button).setOnClickListener {
-                    Log.d("Detail Button", "clicked.")
-                }
-                findViewById<ImageButton>(R.id.bookmark_button).setOnClickListener {
-                    Log.d("Bookmark Button", "clicked." + bookmarked)
-                    bookmarked = !bookmarked
-
-                    val src = if (bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
-                    (it as ImageButton).setImageResource(src)
-                }
+                descriptionText = findViewById(R.id.feed_description)
+                linkButton = findViewById(R.id.detail_button)
+                bookmarkButton = findViewById(R.id.bookmark_button)
             }
             itemView.apply(clickListener())
         }
