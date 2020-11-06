@@ -106,14 +106,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun initTutorialSlide() {
         val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
-        val pagerAdapter = ScreenSlidePagerAdapter(this)
+        val pagerAdapter = TutorialPagerAdapter(this)
         tutorialViewPager.adapter = pagerAdapter
-    }
-
-    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun getItemCount(): Int = 3
-
-        override fun createFragment(position: Int): Fragment = ScreenSlidePagerFragment()
     }
 
     private fun initBookmarkList() {
