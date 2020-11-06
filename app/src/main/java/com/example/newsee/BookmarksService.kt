@@ -1,20 +1,10 @@
 package com.example.newsee
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.*
-import android.util.Log
-import androidx.annotation.RequiresApi
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import io.realm.Realm
 import io.realm.RealmConfiguration
-import okhttp3.OkHttpClient
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import java.util.*
 
 
 class BookmarksService : Service() {
@@ -52,11 +42,10 @@ class BookmarksService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onCreate() {
         bookmarks.addAll(realm.where(Bookmark::class.java).findAll().toList())
         bookmarkLinks.addAll(bookmarks.map { it.link })
-
-        return START_STICKY
+        super.onCreate()
     }
 
     override fun onBind(intent: Intent?): IBinder? {
