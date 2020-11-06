@@ -51,6 +51,11 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:orientation="horizontal" />
-    </LinearLayout>
 
+        <ListView
+            android:id="@+id/bookmark_list"
+            android:divider="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </LinearLayout>

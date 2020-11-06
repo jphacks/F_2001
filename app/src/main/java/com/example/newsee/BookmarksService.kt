@@ -42,11 +42,10 @@ class BookmarksService : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    override fun onCreate() {
         bookmarks.addAll(realm.where(Bookmark::class.java).findAll().toList())
         bookmarkLinks.addAll(bookmarks.map { it.link })
-
-        return START_STICKY
+        super.onCreate()
     }
 
     override fun onBind(intent: Intent?): IBinder? {

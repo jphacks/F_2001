@@ -8,12 +8,17 @@ import android.net.Uri
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.provider.Settings
+import android.util.Log
+import android.view.View
+import android.widget.ListView
 import android.widget.ToggleButton
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-private const val NUM_PAGES = 3
+
+@RequiresApi(Build.VERSION_CODES.R)
 class MainActivity : AppCompatActivity() {
     private var feedsBinder : FeedsService.FeedsBinder? = null
     private val feedsConnection = object : ServiceConnection {
@@ -30,6 +35,8 @@ class MainActivity : AppCompatActivity() {
     private val bookmarksConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
             bookmarksBinder = binder as BookmarksService.BookmarksBinder
+
+            setAdapter()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -40,6 +47,21 @@ class MainActivity : AppCompatActivity() {
     companion object {
         /** ID for the runtime permission dialog */
         private const val OVERLAY_PERMISSION_REQUEST_CODE = 1
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // bookmarksのset
+        val bookmarkIntent = Intent(this, BookmarksService::class.java)
+        bindService(bookmarkIntent, bookmarksConnection, Context.BIND_AUTO_CREATE)
+        this.startService(bookmarkIntent)
+
+        // feedsのfetch
+        // TODO: 「インターネットにつないでください」的なアラートを出す
+        val feedIntent = Intent(applicationContext, FeedsService::class.java)
+        bindService(feedIntent, feedsConnection, Context.BIND_AUTO_CREATE)
+        FeedsService.start(this@MainActivity)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,20 +82,9 @@ class MainActivity : AppCompatActivity() {
                     OverlayService.stop(this@MainActivity)
             }
         }
-        
-        // bookmarksのset
-        val bookmarkIntent = Intent(this, BookmarksService::class.java)
-        bindService(bookmarkIntent, bookmarksConnection, Context.BIND_AUTO_CREATE)
-        this.startService(bookmarkIntent)
-
-        // TODO: 「インターネットにつないでください」的なアラートを出す
-        val feedIntent = Intent(applicationContext, FeedsService::class.java)
-        bindService(feedIntent, feedsConnection, Context.BIND_AUTO_CREATE)
-        FeedsService.start(this@MainActivity)
 
         // Instantiate a ViewPager2 and a PagerAdapter.
         val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
-
         val pagerAdapter = ScreenSlidePagerAdapter(this)
         tutorialViewPager.adapter = pagerAdapter
     }
@@ -85,6 +96,16 @@ class MainActivity : AppCompatActivity() {
             if (!isOverlayGranted()) {
                 finish()  // Cannot continue if not granted
             }
+        }
+    }
+
+    fun setAdapter() {
+        val listView = findViewById<ListView>(R.id.bookmark_list)
+        listView.adapter = BookmarkListAdapter(this, R.layout.bookmark_list_item, bookmarksBinder) { link: String ->
+            val uri = Uri.parse(link)
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
         }
     }
 
@@ -108,7 +129,7 @@ class MainActivity : AppCompatActivity() {
      * sequence.
      */
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun getItemCount(): Int = NUM_PAGES
+        override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment = ScreenSlidePagerFragment()
     }
