@@ -21,8 +21,8 @@ class BookmarksService : Service() {
     private val binder = BookmarksBinder()
 
     companion object {
-        val realmConfig = RealmConfiguration.Builder().allowWritesOnUiThread(true).build()
-        val realm = Realm.getInstance(realmConfig)
+        private val realmConfig = RealmConfiguration.Builder().allowWritesOnUiThread(true).build()
+        private val realm = Realm.getInstance(realmConfig)
         private val bookmarks = mutableListOf<Bookmark>()
         private val bookmarkLinks = mutableListOf<String>()
 
