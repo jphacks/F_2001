@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Point
+import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
@@ -72,16 +73,22 @@ class OverlayService : Service() {
         overlayView = OverlayView.create(this)
         overlayView.findViewById<View>(R.id.pager)
         viewPager = overlayView.findViewById(R.id.pager)
-        viewPager.adapter = MovablePagerAdapter(overlayView, feedsBinder) { longClicked: Boolean ->
-            // viewPagerの要素が長押しされたとき / 離されたとき
-            if (longClicked) {
-                viewPager.isUserInputEnabled = false
-                ViewPagerAutoScrollService.stop(this)
-            } else {
-                viewPager.isUserInputEnabled = true
-                ViewPagerAutoScrollService.start(this, viewPager)
+        viewPager.adapter = MovablePagerAdapter(overlayView, feedsBinder,
+            { longClicked: Boolean ->
+                // viewPagerの要素が長押しされたとき / 離されたとき
+                if (longClicked) {
+                    viewPager.isUserInputEnabled = false
+                    ViewPagerAutoScrollService.stop(this)
+                } else {
+                    viewPager.isUserInputEnabled = true
+                    ViewPagerAutoScrollService.start(this, viewPager)
+                }
+            },
+            { link: String ->
+                val uri = Uri.parse(link)
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
             }
-        }
+        )
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */

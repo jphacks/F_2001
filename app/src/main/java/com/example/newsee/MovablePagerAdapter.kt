@@ -1,6 +1,8 @@
 package com.example.newsee
 
 import android.graphics.Point
+import android.net.Uri
+import android.os.Binder
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import io.realm.Realm
 
 @RequiresApi(Build.VERSION_CODES.R)
-class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?) :
+class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?, private val moveBrowser: ((link: String) -> Unit)?) :
         RecyclerView.Adapter<MovablePagerAdapter.ItemViewHolder>() {
 
     private var isLongClick: Boolean = false
@@ -33,7 +35,7 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
         holder.titleText.text = feed.title
         holder.descriptionText.text = feed.description
         holder.linkButton.setOnClickListener {
-            Log.d("Detail Button", "clicked.")
+            moveBrowser?.invoke(feed.link)
         }
         holder.bookmarkButton.setOnClickListener {
             val src = if (!feed.bookmarked) {
