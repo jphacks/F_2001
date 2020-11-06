@@ -9,9 +9,13 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -33,6 +37,8 @@ class MainActivity : AppCompatActivity() {
             feedsBinder = null
         }
     }
+    // toolbar
+    private lateinit var toolbar: Toolbar
 
     companion object {
         /** ID for the runtime permission dialog */
@@ -72,8 +78,14 @@ class MainActivity : AppCompatActivity() {
                     OverlayService.stop(this@MainActivity)
             }
         }
+
         initTutorialSlide()
         initBookmarkList()
+
+        findViewById<ImageView>(R.id.action_settings).setOnClickListener {
+            val intent = Intent(applicationContext, SettingActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -126,4 +138,24 @@ class MainActivity : AppCompatActivity() {
     /** オーバーレイの権限があるかどうかチェック */
     private fun isOverlayGranted() =
             Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this)
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_settings -> {
+            // User chose the "Settings" item, show the app settings UI...
+            val intent = Intent(applicationContext, SettingActivity::class.java)
+            startActivity(intent)
+            true
+        }
+
+        else -> {
+            // If we got here, the user's action was not recognized.
+            // Invoke the superclass to handle it.
+            super.onOptionsItemSelected(item)
+        }
+    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // super.onCreateOptionsMenu(menu)
+        // menuInflater.inflate(R.menu.setting_icon, menu)
+        return true
+    }
 }
