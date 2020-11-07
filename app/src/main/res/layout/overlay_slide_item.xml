@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingHorizontal="10dp"
-    android:paddingVertical="20dp"
-    android:background="@drawable/overlay_item_background">
+    android:paddingVertical="20dp">
 
     <TextView
         android:id="@+id/feed_title"
