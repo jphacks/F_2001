@@ -27,8 +27,8 @@ class TutorialPagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
                     ニュースが表示されるようになります。
                 """.trimIndent(), R.drawable.tutorial1),
                 SlideItem("STEP2", """
-                    気になったニュースは、すぐチェックできます。
-                    時間がない時にはブックマークも。
+                    ニュースは長押しで動かせます。
+                    左右にスワイプすれば、前後のニュースを読めます。
                 """.trimIndent(), R.drawable.tutorial2),
                 SlideItem("STEP3", """
                     気になったニュースは、すぐチェックできます。
