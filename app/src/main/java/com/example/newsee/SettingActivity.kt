@@ -3,6 +3,7 @@ package com.example.newsee
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.MultiSelectListPreference
 
 class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +22,8 @@ class SettingActivity : AppCompatActivity() {
         //set back button
         // actionbar.setDisplayHomeAsUpEnabled(true)
         // actionbar.setDisplayHomeAsUpEnabled(true)
+
+
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()

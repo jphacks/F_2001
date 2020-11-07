@@ -6,13 +6,26 @@
 
     <PreferenceCategory
         android:key="preferenceCategory"
-        android:title="Category"
-        android:summary="Category Summary">
+        android:title="ニュース設定">
 
-        <CheckBoxPreference
-            android:key="checkBoxPreference"
-            android:summary="CheckBox XXXX-XXXX-XXXX"
-            android:title="CheckBox"/>
+        <MultiSelectListPreference
+            app:enabled="false"
+            android:key="multiSelectListPreference"
+            android:summary=""
+            android:title="ニュースAPI"/>
+    </PreferenceCategory>
+    <!--
+    <PreferenceCategory
+        android:key="preferenceCategory"
+        android:title="ニュース設定">
+
+        <MultiSelectListPreference
+            android:key="multiSelectListPreference"
+            android:summary=""
+            android:entries="@array/newApiOptions"
+            android:entriesValues="@array/newApiOptions"
+            android:defaultValue="@array/newApiOptions"
+            android:title="ニュースAPI"/>
     </PreferenceCategory>
     <PreferenceCategory
         android:key="preferenceCategory"
@@ -33,5 +46,5 @@
         app:key="feedback"
         app:title="Send feedback"
         app:summary="Report technical issues or suggest new features"/>
-
+    -->
 </PreferenceScreen>
