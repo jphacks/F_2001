@@ -21,7 +21,6 @@ class FeedsService : Service() {
     private val binder = FeedsBinder()
     private val existingFeedLinks = mutableListOf<String>()
 
-
     companion object {
         private val feeds = mutableListOf<Feed>()
 
@@ -37,10 +36,10 @@ class FeedsService : Service() {
             }
         }
 
-        fun unbookmark(feed: Feed) {
-            BookmarksService.deleteFromFeed(feed)
+        fun unBookmark(link: String) {
+            BookmarksService.delete(link)
             feeds.replaceAll {
-                if (it.link == feed.link) it.apply { bookmarked = false } else it
+                if (it.link == link) it.apply { bookmarked = false } else it
             }
         }
     }
@@ -81,30 +80,27 @@ class FeedsService : Service() {
                 .client(OkHttpClient.Builder().build())
                 .addConverterFactory(TikXmlConverterFactory.create())
                 .build()
-        val bookmarkLinks = BookmarksService.realm.where(Bookmark::class.java).findAll().toList().map { it.link }
 
         retrofit.create(FeedApi::class.java).fetchFeeds(endpoint).enqueue(object : Callback<YahooFeedsResponse> {
             //非同期処理
             override fun onResponse(call: Call<YahooFeedsResponse>, response: Response<YahooFeedsResponse>) {
                 if (response.isSuccessful) {
-                    response.body()?.let {
-                        it.channel.items.forEach { item ->
-                            if (existingFeedLinks.contains(item.link))
-                                return
-
-                            // TODO: 先頭に追加する? 後にたす?
-                            feeds.add(
-                                Feed(
-                                    title = item.title,
-                                    description = item.description,
-                                    pubDate = item.pubDate,
-                                    link = item.link,
-                                    bookmarked = bookmarkLinks.contains(item.link)
-                                )
+                    response.body()?.let { response ->
+                        val bookmarkLinks = BookmarksService.bookmarkResults.toList().map { it.link }
+                        val newFeeds = response.channel.items.filter {
+                            !existingFeedLinks.contains(it.link)
+                        }.map { item ->
+                            Feed(
+                                title = item.title,
+                                description = item.description,
+                                pubDate = item.pubDate,
+                                link = item.link,
+                                bookmarked = bookmarkLinks.contains(item.link)
                             )
-                            existingFeedLinks.add(item.link)
                         }
-                        Log.d("FETCHED", it.channel.items.toString())
+                        feeds.addAll(newFeeds)
+                        existingFeedLinks.addAll(newFeeds.map { it.link })
+                        OverlayService.notifyToAdapter()
                     }
                 } else {
                     Log.d("NOT SUCCESS", response.toString())
@@ -121,7 +117,7 @@ class FeedsService : Service() {
         fun getFeeds() = feeds
     }
 
-    // FIXME: 今だけ
+    // FIXME: Yahooのみ対応
     private var currentXmlIndex: Int = -1
     private val xmls: List<String> = listOf<String>("domestic.xml", "world.xml", "business.xml", "entertainment.xml", "sports.xml", "it.xml", "science.xml", "local.xml")
     private fun currentUrl(): String {

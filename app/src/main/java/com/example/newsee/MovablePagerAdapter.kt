@@ -1,20 +1,19 @@
 package com.example.newsee
 
 import android.graphics.Point
-import android.net.Uri
-import android.os.Binder
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.Realm
+import org.w3c.dom.Text
 
 @RequiresApi(Build.VERSION_CODES.R)
 class MovablePagerAdapter(private val overlayView: OverlayView, private val binder: FeedsService.FeedsBinder, private val notifyLongClick: ((longClicked: Boolean) -> Unit)?, private val moveBrowser: ((link: String) -> Unit)?) :
@@ -26,32 +25,33 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
     private var moveOffsetY: Int = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovablePagerAdapter.ItemViewHolder =
-            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overlay_slide_item, parent, false))
+            ItemViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.overlay_slide_item, parent, false), parent)
 
     override fun getItemCount(): Int = binder.getFeeds().size
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val feed = binder.getFeeds()[position]
-        holder.titleText.text = feed.title
-        holder.descriptionText.text = feed.description
-        holder.linkButton.setOnClickListener {
-            moveBrowser?.invoke(feed.link)
-        }
-        holder.bookmarkButton.setOnClickListener {
-            val src = if (!feed.bookmarked) {
-                FeedsService.bookmark(feed)
-                R.drawable.ic_baseline_bookmark_24
-            } else {
-                // ブックマークリストから記事を削除
-                FeedsService.unbookmark(feed)
-                R.drawable.ic_baseline_bookmark_border_24
+        binder.getFeeds()[position].let { feed ->
+            holder.titleText.text = feed.title
+            holder.descriptionText.text = feed.description
+            holder.linkButton.setOnClickListener {
+                moveBrowser?.invoke(feed.link)
             }
+            holder.bookmarkButton.setOnClickListener {
+                if (!feed.bookmarked) {
+                    FeedsService.bookmark(feed)
+                } else {
+                    FeedsService.unBookmark(feed.link)
+                }
 
-            (it as ImageButton).setImageResource(src)
+                (it as ImageButton).setImageResource(getBookmarkButtonResource(feed))
+            }
+            holder.bookmarkButton.setImageResource(getBookmarkButtonResource(feed))
         }
     }
 
-    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    private fun getBookmarkButtonResource(feed : Feed) = if (feed.bookmarked) R.drawable.ic_baseline_bookmark_24 else R.drawable.ic_baseline_bookmark_border_24
+
+    inner class ItemViewHolder(itemView: View, parent: ViewGroup) : RecyclerView.ViewHolder(itemView) {
         val titleText: TextView
         val descriptionText: TextView
         val linkButton: ImageButton
@@ -73,7 +73,6 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
             setOnLongClickListener {
                 isLongClick = true
                 isFirstMove = true
-                it.findViewById<GridLayout>(R.id.overlay_slide_grid).setBackgroundResource(R.drawable.border_line)
 
                 notifyLongClick?.invoke(true)
 
@@ -106,7 +105,6 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
                                 isLongClick = false
                                 notifyLongClick?.invoke(false)
                             }
-                            view.findViewById<GridLayout>(R.id.overlay_slide_grid).background = null
 
                             view.performClick()
                         }

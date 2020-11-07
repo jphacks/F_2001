@@ -10,41 +10,34 @@ import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import io.realm.RealmResults
 
 
 @RequiresApi(Build.VERSION_CODES.R)
-class BookmarkListAdapter(context: Context, resource: Int, private val binder: BookmarksService.BookmarksBinder, private val moveBrowser: ((link: String) -> Unit)?) :
+class BookmarkListAdapter(context: Context, private val resource: Int, private val results: RealmResults<Bookmark>, private val moveBrowser: ((link: String) -> Unit)?) :
     ArrayAdapter<Bookmark>(context, resource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: createView(parent)
         val holder = view.tag as ItemViewHolder
 
-        val bookmark = binder.getBookmarks()[position]
-
-        holder.titleText.text = bookmark.title
-        holder.descriptionText.text = bookmark.description
-        holder.linkButton.setOnClickListener {
-            moveBrowser?.invoke(bookmark.link)
-        }
-        holder.bookmarkButton
-        holder.bookmarkButton.setOnClickListener {
-//            val src = if (!bookmark.bookmarked) {
-//                FeedsService.bookmark(feed)
-//                R.drawable.ic_baseline_bookmark_24
-//            } else {
-//                // ブックマークリストから記事を削除
-//                FeedsService.unbookmark(feed)
-//                R.drawable.ic_baseline_bookmark_border_24
-//            }
-//
-//            (it as ImageButton).setImageResource(src)
+        results[position]?.let { bookmark ->
+            holder.titleText.text = bookmark.title
+            holder.descriptionText.text = bookmark.description
+            holder.linkButton.setOnClickListener {
+                moveBrowser?.invoke(bookmark.link)
+            }
+            holder.bookmarkButton
+            holder.bookmarkButton.setOnClickListener {
+                // ブックマークリストから記事を削除
+                FeedsService.unBookmark(bookmark.link)
+            }
         }
 
         return view
     }
 
-    override fun getCount() = binder.getBookmarks().size
+    override fun getCount() = results.size
 
     inner class ItemViewHolder(itemView: View) {
         val titleText: TextView
@@ -54,7 +47,7 @@ class BookmarkListAdapter(context: Context, resource: Int, private val binder: B
 
         init {
             itemView.apply {
-                titleText = findViewById(R.id.feed_title)
+                titleText = findViewById(R.id.bookmark_title)
                 descriptionText = findViewById(R.id.feed_description)
                 linkButton = findViewById(R.id.detail_button)
                 bookmarkButton = findViewById(R.id.bookmark_button)
@@ -63,7 +56,7 @@ class BookmarkListAdapter(context: Context, resource: Int, private val binder: B
     }
 
     private fun createView(parent: ViewGroup) : View {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.bookmark_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(resource, parent, false)
         view.tag = ItemViewHolder(view)
 
         return view

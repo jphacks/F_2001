@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 
 
@@ -35,6 +36,7 @@ class OverlayService : Service() {
 
         private lateinit var feedsBinder : FeedsService.FeedsBinder
         private lateinit var onStopListener : () -> Unit
+        private var movablePagerAdapter: MovablePagerAdapter? = null
 
         fun start(context: Context, binder: FeedsService.FeedsBinder?, listener: () -> Unit) {
             binder ?: return
@@ -54,6 +56,10 @@ class OverlayService : Service() {
             context.startService(intent)
         }
 
+        fun notifyToAdapter() {
+            movablePagerAdapter?.notifyDataSetChanged()
+        }
+
         // To control toggle button in MainActivity. This is not elegant but works.
         var isActive = false
             private set
@@ -71,9 +77,9 @@ class OverlayService : Service() {
 
         // setup overlay view and view pager
         overlayView = OverlayView.create(this)
-        overlayView.findViewById<View>(R.id.pager)
         viewPager = overlayView.findViewById(R.id.pager)
-        viewPager.adapter = MovablePagerAdapter(overlayView, feedsBinder,
+
+        movablePagerAdapter = MovablePagerAdapter(overlayView, feedsBinder,
             { longClicked: Boolean ->
                 // viewPagerの要素が長押しされたとき / 離されたとき
                 if (longClicked) {
@@ -91,6 +97,7 @@ class OverlayService : Service() {
                 startActivity(intent)
             }
         )
+        viewPager.adapter = movablePagerAdapter
     }
 
     /** Handles [ACTION_SHOW] and [ACTION_HIDE] intents. */
@@ -127,6 +134,7 @@ class OverlayService : Service() {
         isActive = false
         overlayView.hide()
         ViewPagerAutoScrollService.stop(this)
+        ViewPagerAutoScrollService.currentItem = viewPager.currentItem
         onStopListener()
         stopSelf()
     }

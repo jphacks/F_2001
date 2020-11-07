@@ -1,55 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:orientation="vertical"
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+    android:id="@+id/feed_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="3"
-    android:rowCount="2" >
-    <GridLayout
-        android:id="@+id/overlay_slide_grid"
+    android:paddingHorizontal="10dp"
+    android:paddingVertical="20dp"
+    android:elevation="4dp"
+    android:background="@drawable/item_background">
+
+    <TextView
+        android:id="@+id/bookmark_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:singleLine="true"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/detail_button"
+        android:layout_toStartOf="@id/bookmark_button"
+        android:layout_toLeftOf="@id/bookmark_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#0000"
+        android:layout_marginTop="-4dp"
+        android:src="@drawable/ic_baseline_open_in_browser_24" />
+
+    <ImageButton
+        android:id="@+id/bookmark_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="#0000"
+        android:layout_marginTop="-4dp"
+        android:src="@drawable/ic_baseline_bookmark_24" />
+
+    <TextView
+        android:id="@+id/feed_description"
+        android:layout_below="@id/bookmark_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingTop="20dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="20dp">
-
-        <TextView
-            android:id="@+id/feed_title"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="start"
-            android:text="信長の野望 37年売れ続ける訳"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/detail_button"
-            android:layout_width="40dp"
-            android:layout_row="0"
-            android:background="#0000"
-            android:src="@drawable/ic_baseline_read_more_24" />
-
-        <ImageButton
-            android:id="@+id/bookmark_button"
-            android:layout_width="30dp"
-            android:layout_row="0"
-            android:background="#0000"
-            android:src="@drawable/ic_baseline_bookmark_border_24" />
-
-        <TextView
-            android:id="@+id/feed_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_row="1"
-            android:layout_column="0"
-            android:layout_columnSpan="3"
-            android:layout_gravity="start"
-            android:layout_marginTop="5dp"
-            android:maxLines="3"
-            android:text="政府の携帯料金引き下げの方針を受けてKDDIとソフトバンクが新料金プランを発表した。KDDIは「UQモバイル」でデータ利用量が20ギガバイトで月額3980円、ソフトバンクも「ワイモバ…"
-            android:textSize="12sp" />
-    </GridLayout>
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginTop="10dp"
+        android:textSize="13sp"
+        android:maxLines="3" />
+</RelativeLayout>
