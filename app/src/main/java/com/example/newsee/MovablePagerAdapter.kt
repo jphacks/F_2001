@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import org.w3c.dom.Text
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -97,6 +98,8 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
                                 overlayView.layoutParams.y = motionEvent.rawY.toInt() - size.y / 2 - moveOffsetY
                                 overlayView.windowManager.updateViewLayout(overlayView, overlayView.layoutParams)
 
+                                overlayView.findViewById<ViewPager2>(R.id.pager).setBackgroundResource(R.drawable.border_line_bold)
+
                                 isFirstMove = false
                             }
                         }
@@ -104,6 +107,8 @@ class MovablePagerAdapter(private val overlayView: OverlayView, private val bind
                             if (isLongClick) {
                                 isLongClick = false
                                 notifyLongClick?.invoke(false)
+
+                                overlayView.findViewById<ViewPager2>(R.id.pager).setBackgroundResource(0)
                             }
 
                             view.performClick()
