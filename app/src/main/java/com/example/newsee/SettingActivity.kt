@@ -8,15 +8,19 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.setting_activity)
+        val settingsFragment = SettingsFragment()
+        supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, settingsFragment)
+                .commit()
 
-        /*
-        val actionbar = supportActionBar
+        val toolbar = supportActionBar
         //set actionbar title
-        actionbar!!.title = "設定"
+        // toolbar.setTitle('hoge')
+        // actionbar!!.title = "設定"
         //set back button
-        actionbar.setDisplayHomeAsUpEnabled(true)
-        actionbar.setDisplayHomeAsUpEnabled(true)
-         */
+        // actionbar.setDisplayHomeAsUpEnabled(true)
+        // actionbar.setDisplayHomeAsUpEnabled(true)
     }
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
