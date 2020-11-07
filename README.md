@@ -39,12 +39,13 @@
 * Yahoo!ニュース RSS
 
 #### フレームワーク・ライブラリ・モジュール
-* Kotlin
-* Android関連
-* realm
+* Kotlin: 主要プログラミング言語
+* Realm: モバイルデータベース
+* Android Jetpack: アンドロイドアプリ開発用ライブラリ群
+* その他Android関連ライブラリ
 
 #### デバイス
-* Android端末
+* Android端末 (推奨OS: Android8以上)
 
 ### 独自技術
 
@@ -52,4 +53,8 @@
 * 独自で開発したものの内容をこちらに記載してください
 * 特に力を入れた部分をファイルリンク、またはcommit_idを記載してください。
 
-[MovablePagerAdapter.kt](https://github.com/jphacks/F_2001/blob/master/app/src/main/java/com/example/newsee/MovablePagerAdapter.kt)
+他のアプリに記事をオーバーレイ表示する部分はUI・UX共に特に力を入れて開発しました。  
+UIは記事の流し見から掲載サイトへのジャンプ、ブックマーク登録の導線が明快であることを心がけ、UXは長押しによるオーバーレイ自体の移動やスワイプによる記事の切り替えなど、複数のジェスチャーを利用した直感的なものを目指しました。
+特に、長押しによるオーバーレイの移動をスワイプなど他のジェスチャーに阻害されないよう行える機能は独自で実装しました。
+
+オーバーレイのロジックは[OverlayService.kt](https://github.com/jphacks/F_2001/blob/master/app/src/main/java/com/example/newsee/OverlayService.kt)に、記事のスワイプビューや長押しによるオーバーレイ移動のロジックは [MovablePagerAdapter.kt](https://github.com/jphacks/F_2001/blob/master/app/src/main/java/com/example/newsee/MovablePagerAdapter.kt) に書かれています。
