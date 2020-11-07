@@ -2,15 +2,14 @@ package com.example.newsee
 
 import android.content.Context
 import android.os.Build
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import io.realm.RealmResults
+import java.lang.Integer.max
+import kotlin.math.min
 
 
 @RequiresApi(Build.VERSION_CODES.R)
@@ -18,7 +17,11 @@ class BookmarkListAdapter(context: Context, private val resource: Int, private v
     ArrayAdapter<Bookmark>(context, resource) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view = convertView ?: createView(parent)
+        if (results.size == 0) {
+            return LayoutInflater.from(parent.context).inflate(R.layout.bookmark_list_item_empty, parent, false)
+        }
+
+        val view = if (convertView?.id == R.layout.bookmark_list_item) convertView else createView(parent)
         val holder = view.tag as ItemViewHolder
 
         results[position]?.let { bookmark ->
@@ -37,7 +40,7 @@ class BookmarkListAdapter(context: Context, private val resource: Int, private v
         return view
     }
 
-    override fun getCount() = results.size
+    override fun getCount() = max(results.size, 1)
 
     inner class ItemViewHolder(itemView: View) {
         val titleText: TextView
