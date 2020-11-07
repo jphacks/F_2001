@@ -22,6 +22,7 @@ class ViewPagerAutoScrollService : Service() {
         private const val ACTION_START = "START"
         private const val ACTION_STOP = "STOP"
         private lateinit var viewPager: ViewPager2
+        var currentItem = 0
 
         fun start(context: Context, viewPager: ViewPager2) {
             val intent = Intent(context, ViewPagerAutoScrollService::class.java).apply {
@@ -61,6 +62,8 @@ class ViewPagerAutoScrollService : Service() {
     override fun onBind(intent: Intent?) = null
 
     private fun startTimer() {
+        viewPager.currentItem = currentItem
+
         timer = Timer(true)
         timer?.schedule(object : TimerTask() {
             override fun run() {
@@ -70,6 +73,7 @@ class ViewPagerAutoScrollService : Service() {
                     } else {
                         viewPager.currentItem = 0
                     }
+                    currentItem = viewPager.currentItem
                 })
             }
         }, 10000, 10000)

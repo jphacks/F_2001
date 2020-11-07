@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.MarginPageTransformer
 import androidx.viewpager2.widget.ViewPager2
 
 
@@ -37,8 +38,6 @@ class MainActivity : AppCompatActivity() {
             feedsBinder = null
         }
     }
-    // toolbar
-    private lateinit var toolbar: Toolbar
 
     companion object {
         /** ID for the runtime permission dialog */
@@ -51,6 +50,7 @@ class MainActivity : AppCompatActivity() {
         BookmarksService.start(this@MainActivity) {
             // bookmarkに変化があったときにnotifyする
             bookmarkListAdapter?.notifyDataSetChanged()
+            OverlayService.notifyToAdapter()
         }
 
         // TODO: 「インターネットにつないでください」的なアラートを出す
@@ -105,14 +105,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun initTutorialSlide() {
         val tutorialViewPager = findViewById<ViewPager2>(R.id.tutorial_pager)
-        val pagerAdapter = ScreenSlidePagerAdapter(this)
-        tutorialViewPager.adapter = pagerAdapter
-    }
-
-    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun getItemCount(): Int = 3
-
-        override fun createFragment(position: Int): Fragment = ScreenSlidePagerFragment()
+        // space between 5 * 2 dp
+        tutorialViewPager.setPageTransformer(MarginPageTransformer(dpTopx(10, this).toInt()))
+        tutorialViewPager.adapter = TutorialPagerAdapter(this)
     }
 
     private fun initBookmarkList() {

@@ -36,10 +36,10 @@ class FeedsService : Service() {
             }
         }
 
-        fun unBookmark(feed: Feed) {
-            BookmarksService.delete(feed.link)
+        fun unBookmark(link: String) {
+            BookmarksService.delete(link)
             feeds.replaceAll {
-                if (it.link == feed.link) it.apply { bookmarked = false } else it
+                if (it.link == link) it.apply { bookmarked = false } else it
             }
         }
     }
@@ -100,6 +100,7 @@ class FeedsService : Service() {
                         }
                         feeds.addAll(newFeeds)
                         existingFeedLinks.addAll(newFeeds.map { it.link })
+                        OverlayService.notifyToAdapter()
                     }
                 } else {
                     Log.d("NOT SUCCESS", response.toString())

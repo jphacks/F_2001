@@ -45,7 +45,6 @@ class BookmarksService : Service() {
         }
 
         fun delete(link: String) {
-            Log.d("HOGEFUGA", "delete called")
             if (!existsBookmarkOnRealm(link))
                 return
             realm.executeTransaction {
