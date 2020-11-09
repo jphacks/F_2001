@@ -2,6 +2,8 @@
 
 [![Newsee画像](./image.png)](https://drive.google.com/drive/folders/1B9Rz9-gMOBJcHwFG7bFMSIkI9fOM2MVt?usp=sharing)
 
+[ダウンロードリンク (deploygate)](https://dply.me/8taonm)
+
 ## 製品概要
 
 ### 背景(製品開発のきっかけ、課題等）

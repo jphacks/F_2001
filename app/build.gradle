@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.kapt'
 }
 apply plugin: 'realm-android'
+apply plugin: 'deploygate'
 
 android {
     compileSdkVersion 30
