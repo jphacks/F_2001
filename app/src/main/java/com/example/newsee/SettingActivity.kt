@@ -14,21 +14,13 @@ class SettingActivity : AppCompatActivity() {
                 .beginTransaction()
                 .replace(R.id.fragment_container, settingsFragment)
                 .commit()
-
-        val toolbar = supportActionBar
-        //set actionbar title
-        // toolbar.setTitle('hoge')
-        // actionbar!!.title = "設定"
-        //set back button
-        // actionbar.setDisplayHomeAsUpEnabled(true)
-        // actionbar.setDisplayHomeAsUpEnabled(true)
-
-
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
+
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         else -> {
             // If we got here, the user's action was not recognized.
