@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+
+    <PreferenceCategory
+        android:key="preferenceCategory"
+        android:title="ニュース設定">
+
+        <MultiSelectListPreference
+            app:enabled="false"
+            android:key="multiSelectListPreference"
+            android:summary=""
+            android:title="ニュースAPI"/>
+    </PreferenceCategory>
+    <!--
+    <PreferenceCategory
+        android:key="preferenceCategory"
+        android:title="ニュース設定">
+
+        <MultiSelectListPreference
+            android:key="multiSelectListPreference"
+            android:summary=""
+            android:entries="@array/newApiOptions"
+            android:entriesValues="@array/newApiOptions"
+            android:defaultValue="@array/newApiOptions"
+            android:title="ニュースAPI"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="preferenceCategory"
+        android:title="Category"
+        android:summary="Category Summary">
+
+        <CheckBoxPreference
+            android:key="checkBoxPreference"
+            android:summary="CheckBox XXXX-XXXX-XXXX"
+            android:title="CheckBox"/>
+    </PreferenceCategory>
+
+    <SwitchPreferenceCompat
+        app:key="notifications"
+        app:title="Enable message notifications"/>
+
+    <Preference
+        app:key="feedback"
+        app:title="Send feedback"
+        app:summary="Report technical issues or suggest new features"/>
+    -->
+</PreferenceScreen>
